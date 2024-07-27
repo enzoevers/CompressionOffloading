@@ -32,3 +32,6 @@ Now compression and decompression work. Something that I was thinking about as w
 - https://www.cast-inc.com/compression/lossless-data-compression/zipaccel-c + https://www.cast-inc.com/company/discontinued-not-categorized/gzip-rd-xil
 - https://www.cast-inc.com/compression/lossless-data-compression/zipaccel-d
 - https://github.com/TripRichert/viv-prj-gen
+- https://zlib.net/feldspar.html
+- https://www.infinitepartitions.com/cgi-bin/showarticle.cgi?article=art001
+- https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-wusp/fb98aa28-5cd7-407f-8869-a6cef1ff1ccb?redirectedfrom=MSDN
