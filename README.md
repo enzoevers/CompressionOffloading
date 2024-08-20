@@ -8,6 +8,10 @@ As for now, first the [DEFLATE](https://en.wikipedia.org/wiki/Deflate) algorithm
 - Get more experience with FPGA/Zynq (the platform to offload to)
 
 ## Plan
+0. Use the [zlib library](https://www.zlib.net/) to compress and decompress:
+    - [ ] A piece of data.
+    - [ ] A file.
+    - [ ] Multiple files.
 1. Write the DEFLATE compression algorithm in C.
     - [ ] Successful if existing decompression programs can decompress the data that was compressed with my custom C algorithm.
 2. Write a decompression algorithm in C.
