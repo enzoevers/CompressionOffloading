@@ -1,0 +1,32 @@
+name: CI-Scripts
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    paths:
+      - ".github/workflows/*"
+      - "Scripts/*"
+      - "**/CMakeLists.txt"
+      - "**.c"
+      - "**.cpp"
+      - "**.h"
+      - "**.hpp"
+
+jobs:
+  build_run_targets:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jwlawson/actions-setup-cmake@v1.14
+        with:
+          cmake-version: "3.25.x"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - run: |
+          python Scripts/BuildAll.py
+          python Scripts/RunBenchmark.py
+      

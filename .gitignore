@@ -1,0 +1,5 @@
+# CMAKE generated files
+Build/*
+
+# Visual studio generated files
+main.exe
