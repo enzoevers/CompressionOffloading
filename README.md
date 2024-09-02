@@ -4,28 +4,34 @@ Compress and decompress data with common algorithms and use benchmarks to see if
 As for now, first the [DEFLATE](https://en.wikipedia.org/wiki/Deflate) algorithm will be used with the [ZIP](https://en.wikipedia.org/wiki/ZIP_(file_format)) file format.
 
 ## Personal goals
-- Learn about compression algorithms
-- Get more experience with FPGA/Zynq (the platform to offload to)
+- Learn about (de)compression algorithms
+- Get more experience with FPGA/Zynq
 
 ## Plan
-0. Use the [zlib library](https://www.zlib.net/) to compress and decompress:
-    - [ ] A piece of data.
-    - [ ] A file.
-    - [ ] Multiple files.
-1. Write the DEFLATE compression algorithm in C.
-    - [ ] Successful if existing decompression programs can decompress the data that was compressed with my custom C algorithm.
-2. Write a decompression algorithm in C.
-    - [ ] Successful if my custom C decompression algorithm can decompress the data that was compressed with existing compression programs.
+0. Use the [zlib library](https://www.zlib.net/) to compress and decompress ([example](https://zlib.net/zlib_how.html)):
+    - [ ] A C-string
+    - [ ] A single file
+        - [ ] DEFLATE
+        - [ ] DEFLATE -> ZIP
+        - [ ] INFLATE
+        - [ ] ZIP -> INFLATE
+    - [ ] Multiple files
+        - [ ] DEFLATE -> ZIP
+        - [ ] ZIP -> INFLATE
+1. Write the DEFLATE algorithm in C.
+    - [ ] See `0.` but replace the DEFLATE implementation from zlib with my custom implementation
+2. Write the INFLATE algorithm in C.
+    - [ ] See `0.` but replace the DEFLATE implementation from zlib with my custom implementation
 
-These first two points should give me a good understanding of the chosen (de)compression algorithm(s).
+These first points should give a good understanding of the DEFLATE and INFLATE algorithms and ZIP format.
 
 To recall my knowledge of FPGA development (VHDL) first a simple infrastructure will be created.
 
 3. In the Zynq device, implement infrastructure that can send a file from the Processing System (PS) (in chunks) to the Programmable Logic (PL), and where the PL sends de data back to the PS.
-    - [ ] Files of any extension can be sent via the PS -> PL -> PS pipeline and the received file is identical to the sent file.
+    - [ ] Send a C-string from PS -> PL -> PS
 4. Find out how to profile the individual parts of pipeline to compare performance numbers.
-5. Implement the compression algorithm on the FPGA.
-6. Implement the decompression algorithm on the FPGA.
+5. Implement an FPGA-friendly version of DEFLATE in VHDL
+6. Implement an FPGA-friendly version of INFLATE in VHDL
 
 Now compression and decompression work. Something that I was thinking about as well was that a stream of incoming data in the FPGA could be compressed on the FPGA and, as a stream, send compressed chucks to the PS. This way it may be possible to store data (logging) data more efficiently without needing a lot of RAM.
 
