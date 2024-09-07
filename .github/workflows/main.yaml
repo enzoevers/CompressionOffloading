@@ -17,6 +17,8 @@ jobs:
   build_run_targets:
     runs-on: ubuntu-22.04
     timeout-minutes: 15
+    permissions:
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - uses: jwlawson/actions-setup-cmake@v1.14
@@ -27,6 +29,9 @@ jobs:
           python-version: '3.11'
 
       - run: |
-          python Scripts/BuildAll.py
-          python Scripts/RunBenchmark.py
-      
+          python -u Scripts/BuildAll.py
+          python -u Scripts/RunBenchmark.py
+
+      - uses: thollander/actions-comment-pull-request@v2
+        with:
+          filePath: BenchmarkResults.txt

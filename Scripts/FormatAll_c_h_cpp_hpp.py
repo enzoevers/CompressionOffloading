@@ -13,12 +13,12 @@ FilesToFormat += list(TopLevelCMakeListsDirectory.glob("**/*.cpp"))
 FilesToFormat += list(TopLevelCMakeListsDirectory.glob("**/*.hpp"))
 
 print()
-print("Formatting:")
+print("Checking if formatted:")
 for file in FilesToFormat:
     print("\t{}".format(file))
 print()
 
-ClangFormatCommand = "clang-format -i -style=file {}".format(
+ClangFormatCommand = "clang-format --dry-run -Werror -style=file {}".format(
     " ".join([str(file) for file in FilesToFormat])
 )
 subprocess.run(

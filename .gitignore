@@ -3,3 +3,6 @@ Build/*
 
 # Visual studio generated files
 main.exe
+
+# Benchmark generated files
+BenchmarkResults.txt*
