@@ -3,6 +3,7 @@
         "ms-vscode.cpptools",
         "ms-python.black-formatter",
         "ms-python.python",
-        "xaver.clang-format"
+        "xaver.clang-format",
+        "kylinideteam.cmake-intellisence"
     ]
 }

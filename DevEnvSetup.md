@@ -17,28 +17,6 @@ git config --local core.hooksPath ./GitHooks
 ## Visual studio (any OS)
 Install the recommended packages for this reposity (see `./vscode/extensions.json`)
 
-### Formatting
-
-Add the snippets below to your user settings (`settings.json`, or `View > Command Palette...` and run `Preferences: Open User Settings (JSON)`) to enable auto-formatting.
-
-
-```
-"[python]": {`
-    "editor.defaultFormatter": "ms-python.black-formatter",
-    "editor.formatOnSave": true
-}
-```
-
-```
-"[c]": {
-    "editor.defaultFormatter": "xaver.clang-format",
-    "editor.formatOnSave": true
-  }
-```
-
-# IDE related setup
-
-
 # OS related setup
 
 ## Windows
