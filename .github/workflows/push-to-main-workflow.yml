@@ -1,0 +1,24 @@
+name: Push to main Workflow
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build_run_targets:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jwlawson/actions-setup-cmake@v1.14
+        with:
+          cmake-version: "3.25.x"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - run: |
+          python -u Scripts/FormatAll_c_h_cpp_hpp.py
+          python -u Scripts/BuildAll.py
+          python -u Scripts/RunBenchmark.py
