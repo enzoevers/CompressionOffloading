@@ -1,3 +1,3 @@
 #!/bin/sh
 
-python Scripts/FormatAll_c_h_cpp_hpp.py
+python Scripts/CheckFormattingAll_c_h_cpp_hpp.py

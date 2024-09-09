@@ -7,4 +7,9 @@
         "editor.defaultFormatter": "ms-python.black-formatter",
         "editor.formatOnSave": true
     },
+    "files.associations": {
+        "deflate_zlib.h": "c",
+        "zlib.h": "c",
+        "ideflate.h": "c"
+    },
 }

@@ -11,6 +11,8 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - uses: jwlawson/actions-setup-cmake@v1.14
         with:
           cmake-version: "3.25.x"
@@ -19,6 +21,8 @@ jobs:
           python-version: '3.11'
 
       - run: |
-          python -u Scripts/FormatAll_c_h_cpp_hpp.py
-          python -u Scripts/BuildAll.py
+          python -u Scripts/CheckFormattingAll_c_h_cpp_hpp.py
+          python -u Scripts/BuildAndInstallExternalLibs.py
+          python -u Scripts/BuildAndInstallCoDeLib.py
+          python -u Scripts/BuildBenchmark.py
           python -u Scripts/RunBenchmark.py

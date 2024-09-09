@@ -38,8 +38,12 @@ Now you should be able build and run:
 > Note that you may have to close and re-open viusal studio to get the updated PATH.
 
 ```cmd
-C:<path to root of this project> python .\Scripts\BuildAll.py
-C:<path to root of this project> Build\Benchmark.exe
+$ cd <root of this repositoory>
+$ git submodule update --init
+$ python ./Scripts/BuildAndInstallExternalLibs.py
+$ python ./Scripts/BuildAndInstallCoDeLib.py
+$ python ./Scripts/BuildBenchmark.py
+$ python ./Scripts/RunBenchmark.py
 ```
 
 Additionally, you should be able to set breakpoints in the source code and run the code and debugger via the Visual Studio Code UI.

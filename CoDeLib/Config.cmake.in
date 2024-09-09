@@ -1,0 +1,8 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/CoDeLibTargets.cmake")
+
+check_required_components(CoDeLib)
+
+include(CMakeFindDependencyMacro)
+find_dependency(ZLIB REQUIRED)
