@@ -1,5 +1,6 @@
 # CMAKE generated files
-Build/*
+Build
+Install
 
 # Visual studio generated files
 main.exe

@@ -5,11 +5,11 @@ import re
 import fileinput
 
 CurrentScriptPath = Path(os.path.dirname(os.path.abspath(__file__)))
-ProjectRootPath = Path(CurrentScriptPath.parent)
-TopLevelCMakeListsDirectory = Path(ProjectRootPath / "Benchmark")
-BuildDirectory = Path(ProjectRootPath / "Build")
+RepositoryRootPath = Path(CurrentScriptPath.parent)
+BenchmarkRootPath = Path(RepositoryRootPath / "Benchmark")
+BuildDirectory = Path(BenchmarkRootPath / "Build")
 
-os.chdir(ProjectRootPath)
+os.chdir(RepositoryRootPath)
 
 BenchmarkExecutable = Path(BuildDirectory / "Benchmark")
 BenchmarkOptions = "-i -e 5"

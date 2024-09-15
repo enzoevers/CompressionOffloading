@@ -3,14 +3,17 @@ from pathlib import Path
 import subprocess
 
 CurrentScriptPath = Path(os.path.dirname(os.path.abspath(__file__)))
-ProjectRootPath = Path(CurrentScriptPath.parent)
-TopLevelCMakeListsDirectory = Path(ProjectRootPath / "Benchmark")
-BuildDirectory = Path(ProjectRootPath / "Build")
+RepositoryRootPath = Path(CurrentScriptPath.parent)
+BenchmarkRootPath = Path(RepositoryRootPath / "Benchmark")
+BuildDirectory = Path(BenchmarkRootPath / "Build")
+CoDeLibInstallDirectory = Path(RepositoryRootPath / "CoDeLib" / "Install")
+ExternalLibPath = Path(RepositoryRootPath / "External")
+ExternalLibInstallPath = Path(ExternalLibPath / "Install")
 
 if not BuildDirectory.exists():
-    BuildDirectory.mkdir()
+    BuildDirectory.mkdir(parents=True)
 
-os.chdir(ProjectRootPath)
+os.chdir(RepositoryRootPath)
 
 
 def GetGCCPath() -> str:
@@ -52,8 +55,14 @@ CmakeGenerator = GetCmakeGenerator()
 print("GCCPath: {}".format(GCCPath))
 print("CmakeGenerator: {}".format(CmakeGenerator))
 
-configureCommand = 'cmake -G "{0}" -DCMAKE_C_COMPILER="{1}" -S {2} -B {3}'.format(
-    CmakeGenerator, GCCPath, TopLevelCMakeListsDirectory, BuildDirectory
+print("Configuring CMake")
+configureCommand = 'cmake -G "{0}" -DCMAKE_C_COMPILER="{1}" -DCMAKE_PREFIX_PATH="{2}" -DCMAKE_BUILD_TYPE=Debug -S {3} -B {4} -DZLIB_ROOT="{5}"'.format(
+    CmakeGenerator,
+    GCCPath,
+    CoDeLibInstallDirectory,
+    BenchmarkRootPath,
+    BuildDirectory,
+    ExternalLibInstallPath,
 )
 subprocess.run(
     configureCommand,
@@ -61,7 +70,8 @@ subprocess.run(
     check=True,
 )
 
-buildCommand = "cmake --build {0}".format(BuildDirectory)
+print("Building Benchmark")
+buildCommand = "cmake --build {0} --config Debug".format(BuildDirectory)
 subprocess.run(
     buildCommand,
     shell=True,
