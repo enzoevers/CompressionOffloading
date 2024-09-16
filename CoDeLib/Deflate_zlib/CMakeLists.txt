@@ -8,5 +8,6 @@ target_include_directories(Deflate_zlib PUBLIC
 
 target_include_directories(Deflate_zlib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
+set(ZLIB_USE_STATIC_LIBS "ON")
 find_package(ZLIB REQUIRED)
 target_link_libraries(Deflate_zlib PRIVATE ZLIB::ZLIB)

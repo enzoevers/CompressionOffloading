@@ -7,6 +7,8 @@ include(GNUInstallDirs)
 file(WRITE ${CMAKE_BINARY_DIR}/empty.c "")
 add_library(CoDeLib STATIC ${CMAKE_BINARY_DIR}/empty.c)
 
+add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+
 include_directories(
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
