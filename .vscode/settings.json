@@ -15,6 +15,7 @@
         "stdio.h": "c",
         "crtdefs.h": "c",
         "io.h": "c",
-        "direct.h": "c"
+        "direct.h": "c",
+        "inflate_zlib.h": "c"
     },
 }

@@ -21,3 +21,4 @@ target_include_directories(BenchmarkCompressTextFile PRIVATE ${b63_SOURCE_DIR}/i
 
 target_link_libraries(BenchmarkCompressTextFile PRIVATE CoDeLib::CoDeLib)
 target_link_libraries(BenchmarkCompressTextFile PRIVATE CoDeLib::Deflate_zlib)
+target_link_libraries(BenchmarkCompressTextFile PRIVATE CoDeLib::Inflate_zlib)

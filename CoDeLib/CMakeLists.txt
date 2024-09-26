@@ -15,11 +15,12 @@ include_directories(
 )
 
 add_subdirectory(Deflate_zlib)
-#add_subdirectory(INFLATE_zlib)
+add_subdirectory(Inflate_zlib)
 
 set(CoDeLib_PUBLIC_INCLUDE_PATH include/CoDeLib)
 set(COMMON_HEADERS
     ${CoDeLib_PUBLIC_INCLUDE_PATH}/IDeflate.h
+    ${CoDeLib_PUBLIC_INCLUDE_PATH}/IInflate.h
 )
 install(FILES ${COMMON_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/CoDeLib)
 
@@ -29,8 +30,14 @@ set(Deflate_zlib_PUBLIC_HEADERS
 )
 install(FILES ${Deflate_zlib_PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/CoDeLib/Deflate_zlib)
 
+set(Inflate_zlib_PUBLIC_INCLUDE_PATH ${CoDeLib_PUBLIC_INCLUDE_PATH}/Inflate_zlib)
+set(Inflate_zlib_PUBLIC_HEADERS
+    ${Inflate_zlib_PUBLIC_INCLUDE_PATH}/Inflate_zlib.h
+)
+install(FILES ${Inflate_zlib_PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/CoDeLib/Inflate_zlib)
+
 install(
-    TARGETS CoDeLib Deflate_zlib
+    TARGETS CoDeLib Deflate_zlib Inflate_zlib
     EXPORT CoDeLibTargets
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
