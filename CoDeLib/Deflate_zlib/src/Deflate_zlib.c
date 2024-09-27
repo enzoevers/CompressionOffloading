@@ -32,13 +32,19 @@ DEFLATE_RETURN_CODES Deflate(FILE *pInputFile, FILE *pOutputFile,
     unsigned char inBuffer[BUFFER_SIZE_BYTES];
     unsigned char outBuffer[BUFFER_SIZE_BYTES];
 
+    int method = Z_DEFLATED;
+    int windowBits = -9;
+    int memLevel = 8;
+    int strategy = Z_DEFAULT_STRATEGY;
+
     int compressionLevel = Z_DEFAULT_COMPRESSION;
 
     /* allocate deflate state */
     tmpDataStream.zalloc = Z_NULL;
     tmpDataStream.zfree = Z_NULL;
     tmpDataStream.opaque = Z_NULL;
-    returnCode = deflateInit(&tmpDataStream, compressionLevel);
+    returnCode = deflateInit2(&tmpDataStream, compressionLevel, method,
+                              windowBits, memLevel, strategy);
     if (returnCode != Z_OK) {
         return returnCode;
     }

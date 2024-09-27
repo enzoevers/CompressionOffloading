@@ -40,7 +40,7 @@ for BenchmarkName in BenchmarkList:
 
     BenchmarkExecutablePath = Path(BuildDirectory / BenchmarkName)
     # Note that one epoch has a maximum of 32 iterations
-    BenchmarkOptions = '"' + str(BenchmarkTestFilesPath) + '/"' + " -i -e 2"
+    BenchmarkOptions = '"' + str(BenchmarkTestFilesPath) + '/"' + " " + "-e 2"
     BenchmarkCommand = str(BenchmarkExecutablePath) + " " + BenchmarkOptions
 
     print("Command: {}".format(BenchmarkCommand))

@@ -103,7 +103,7 @@ size_t GetFileSizeInBytes(FILE *pFile) {
     return fileSize;
 }
 
-B63_BASELINE(basic, n) {
+B63_BENCHMARK(CompressDecompress_SmallTextFile_zlib, n) {
     FILE *pInFile = NULL;
     FILE *pOutCompressedFile = NULL;
     FILE *pOutDecompressedFile = NULL;
@@ -200,13 +200,6 @@ B63_BASELINE(basic, n) {
         fclose(pOutCompressedFile);
         fclose(pOutDecompressedFile);
     }
-}
-
-B63_BENCHMARK(same_bit_different, n) {
-    // const DEFLATE_RETURN_CODES status = deflate_zlib.Defalte(NULL, NULL,
-    // NULL);
-    //  assert(status == DEFLATE_SUCCESS);
-    // B63_KEEP(status);
 }
 
 int main(int argc, char **argv) {

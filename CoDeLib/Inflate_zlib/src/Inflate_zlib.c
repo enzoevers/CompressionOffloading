@@ -31,13 +31,15 @@ INFLATE_RETURN_CODES Inflate(FILE *pInputFile, FILE *pOutputFile,
     unsigned char inBuffer[BUFFER_SIZE_BYTES];
     unsigned char outBuffer[BUFFER_SIZE_BYTES];
 
+    int windowBits = -9;
+
     /* allocate inflate state */
     tmpDataStream.zalloc = Z_NULL;
     tmpDataStream.zfree = Z_NULL;
     tmpDataStream.opaque = Z_NULL;
     tmpDataStream.avail_in = 0;
     tmpDataStream.next_in = Z_NULL;
-    returnCode = inflateInit(&tmpDataStream);
+    returnCode = inflateInit2(&tmpDataStream, windowBits);
     if (returnCode != Z_OK) {
         return INFLATE_ERROR;
     }
