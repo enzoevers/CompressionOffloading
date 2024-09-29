@@ -16,6 +16,9 @@
         "crtdefs.h": "c",
         "io.h": "c",
         "direct.h": "c",
-        "inflate_zlib.h": "c"
+        "inflate_zlib.h": "c",
+        "unity.h": "c",
+        "raiistring.h": "c",
+        "fileutils.h": "c"
     },
 }

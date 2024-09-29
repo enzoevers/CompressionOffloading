@@ -1,6 +1,7 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.28)
 project(COMPRESSION_DECOMPRESSION_LIB VERSION 0.0.1 LANGUAGES C)
 
+include(FetchContent)
 include(GNUInstallDirs)
 
 # CoDeLib stands for CompressionDecompressionLib
@@ -14,30 +15,20 @@ include_directories(
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-add_subdirectory(Deflate_zlib)
-add_subdirectory(Inflate_zlib)
-
-set(CoDeLib_PUBLIC_INCLUDE_PATH include/CoDeLib)
+set(CoDeLib_PUBLIC_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include/CoDeLib)
 set(COMMON_HEADERS
     ${CoDeLib_PUBLIC_INCLUDE_PATH}/IDeflate.h
     ${CoDeLib_PUBLIC_INCLUDE_PATH}/IInflate.h
 )
 install(FILES ${COMMON_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/CoDeLib)
 
-set(Deflate_zlib_PUBLIC_INCLUDE_PATH ${CoDeLib_PUBLIC_INCLUDE_PATH}/Deflate_zlib)
-set(Deflate_zlib_PUBLIC_HEADERS
-    ${Deflate_zlib_PUBLIC_INCLUDE_PATH}/Deflate_zlib.h
-)
-install(FILES ${Deflate_zlib_PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/CoDeLib/Deflate_zlib)
-
-set(Inflate_zlib_PUBLIC_INCLUDE_PATH ${CoDeLib_PUBLIC_INCLUDE_PATH}/Inflate_zlib)
-set(Inflate_zlib_PUBLIC_HEADERS
-    ${Inflate_zlib_PUBLIC_INCLUDE_PATH}/Inflate_zlib.h
-)
-install(FILES ${Inflate_zlib_PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/CoDeLib/Inflate_zlib)
+add_subdirectory(Deflate_zlib)
+add_subdirectory(Inflate_zlib)
+add_subdirectory(RaiiString)
+add_subdirectory(Test)
 
 install(
-    TARGETS CoDeLib Deflate_zlib Inflate_zlib
+    TARGETS CoDeLib Deflate_zlib Inflate_zlib RaiiString Utility
     EXPORT CoDeLibTargets
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

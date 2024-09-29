@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 import subprocess
 import re
-import fileinput
 
 CurrentScriptPath = Path(os.path.dirname(os.path.abspath(__file__)))
 RepositoryRootPath = Path(CurrentScriptPath.parent)
@@ -19,15 +18,13 @@ def escape_ansi(line):
 
 
 BenchmarkList = [
-    "BenchmarkCompressTextFile",
+    "BenchmarkDeflateInflateTextFile",
 ]
 
 BenchmarkResultsFileName = "BenchmarkResults.txt"
 
 if os.path.exists(BenchmarkResultsFileName):
     os.remove(BenchmarkResultsFileName)
-
-BenchmarkResultsFile = open(BenchmarkResultsFileName, "a")
 
 for BenchmarkName in BenchmarkList:
     BenchmarkHeader = (
@@ -46,10 +43,6 @@ for BenchmarkName in BenchmarkList:
     print("Command: {}".format(BenchmarkCommand))
 
     BenchmarkResultsFileRawName = BenchmarkName + "_Results.txt" + ".raw"
-
-    if os.path.exists(BenchmarkResultsFileRawName):
-        os.remove(BenchmarkResultsFileRawName)
-
     BenchmarkResultsFileRaw = open(BenchmarkResultsFileRawName, "w+")
     subprocess.run(
         BenchmarkCommand,
@@ -58,6 +51,7 @@ for BenchmarkName in BenchmarkList:
         stdout=BenchmarkResultsFileRaw,
     )
 
+    BenchmarkResultsFile = open(BenchmarkResultsFileName, "w+")
     BenchmarkResultsFile.write(BenchmarkHeader)
     BenchmarkResultsFileRaw.seek(0)
     for line in BenchmarkResultsFileRaw:

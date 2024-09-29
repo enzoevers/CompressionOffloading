@@ -14,11 +14,14 @@ FetchContent_MakeAvailable(b63)
 # Custom compressions libraries
 find_package(CoDeLib REQUIRED)
 
-add_executable(BenchmarkCompressTextFile BenchmarkCompressTextFile.c)
+add_executable(BenchmarkDeflateInflateTextFile BenchmarkDeflateInflateTextFile.c)
 
-target_link_libraries(BenchmarkCompressTextFile PRIVATE m) # Math library required by b63
-target_include_directories(BenchmarkCompressTextFile PRIVATE ${b63_SOURCE_DIR}/include)
+target_link_libraries(BenchmarkDeflateInflateTextFile PRIVATE m) # Math library required by b63
+target_include_directories(BenchmarkDeflateInflateTextFile PRIVATE ${b63_SOURCE_DIR}/include)
+target_include_directories(BenchmarkDeflateInflateTextFile PRIVATE ${Unity_SOURCE_DIR}/src)
 
-target_link_libraries(BenchmarkCompressTextFile PRIVATE CoDeLib::CoDeLib)
-target_link_libraries(BenchmarkCompressTextFile PRIVATE CoDeLib::Deflate_zlib)
-target_link_libraries(BenchmarkCompressTextFile PRIVATE CoDeLib::Inflate_zlib)
+target_link_libraries(BenchmarkDeflateInflateTextFile PRIVATE CoDeLib::CoDeLib)
+target_link_libraries(BenchmarkDeflateInflateTextFile PRIVATE CoDeLib::Deflate_zlib)
+target_link_libraries(BenchmarkDeflateInflateTextFile PRIVATE CoDeLib::Inflate_zlib)
+target_link_libraries(BenchmarkDeflateInflateTextFile PRIVATE CoDeLib::RaiiString)
+target_link_libraries(BenchmarkDeflateInflateTextFile PRIVATE CoDeLib::Utility)
