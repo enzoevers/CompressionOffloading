@@ -6,4 +6,9 @@ Install
 main.exe
 
 # Benchmark generated files
-BenchmarkResults.txt*
+Benchmark*.txt*
+Benchmark/Files/*.compressed.*
+Benchmark/Files/*.decompressed.*
+
+# Test generated files
+Test*.txt*

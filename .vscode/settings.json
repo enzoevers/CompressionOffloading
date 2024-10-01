@@ -10,6 +10,15 @@
     "files.associations": {
         "deflate_zlib.h": "c",
         "zlib.h": "c",
-        "ideflate.h": "c"
+        "ideflate.h": "c",
+        "assert.h": "c",
+        "stdio.h": "c",
+        "crtdefs.h": "c",
+        "io.h": "c",
+        "direct.h": "c",
+        "inflate_zlib.h": "c",
+        "unity.h": "c",
+        "raiistring.h": "c",
+        "fileutils.h": "c"
     },
 }

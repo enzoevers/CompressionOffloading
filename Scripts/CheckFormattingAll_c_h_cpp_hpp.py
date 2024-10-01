@@ -4,13 +4,20 @@ import subprocess
 import glob
 
 CurrentScriptPath = Path(os.path.dirname(os.path.abspath(__file__)))
-ProjectRootPath = Path(CurrentScriptPath.parent)
-TopLevelCMakeListsDirectory = Path(ProjectRootPath / "Benchmark")
+RepositoryRootPath = Path(CurrentScriptPath.parent)
+BenchmarkRootPath = Path(RepositoryRootPath / "Benchmark")
+CoDeLibRootPath = Path(RepositoryRootPath / "CoDeLib")
 
-FilesToFormat = list(TopLevelCMakeListsDirectory.glob("**/*.c"))
-FilesToFormat += list(TopLevelCMakeListsDirectory.glob("**/*.h"))
-FilesToFormat += list(TopLevelCMakeListsDirectory.glob("**/*.cpp"))
-FilesToFormat += list(TopLevelCMakeListsDirectory.glob("**/*.hpp"))
+ProjectPathsToCheck = [BenchmarkRootPath, CoDeLibRootPath]
+FilesToFormat = list()
+
+for ProjectPath in ProjectPathsToCheck:
+    patterns = ["**/*.c", "**/*.h", "**/*.cpp", "**/*.hpp"]
+
+    for pattern in patterns:
+        for file in ProjectPath.glob(pattern):
+            if "Build" not in file.parts and "Install" not in file.parts:
+                FilesToFormat.append(file)
 
 print()
 print("Checking if formatted:")
@@ -26,3 +33,5 @@ subprocess.run(
     shell=True,
     check=True,
 )
+
+print("All files are formatted correctly")
