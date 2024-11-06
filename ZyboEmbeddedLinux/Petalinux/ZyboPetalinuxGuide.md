@@ -74,9 +74,9 @@ Copy the board file into `<Xilinx install dir>/Vivado/data/boards/board_files`. 
 </details>
 
 <details>
-  <summary>4.0 Create and export a based bitstream from Vivado</summary>
+  <summary>4.0 Create and export a bitstream from Vivado</summary>
 
-### 4.0 Create and export a based bitstream from Vivado
+### 4.0 Create and export a bitstream from Vivado
 
 Create a new project in Vivado and select RTL Project without sources.
 
@@ -102,7 +102,7 @@ The result would look like this:
 
 Create a HDL wrapper for the block design by right blocking on the block design source and selecting "Create HDL wrapper". Everything can stay default.
 
-<img src=./images/VivadoProject_AutoConfigure.png>
+<img src=./images/VivadoProject_GenerateHDLWrapper.png>
 
 Now generate a bitstream. Leave everything default.
 
@@ -121,7 +121,7 @@ Lastly export the hardware and make sure to include the bitstream. Keep a note o
 
 ### 5.0 Copy the exported hardware to the VM
 
-Go to the exported `.xsa` file and copy it to the Ubuntu VM. In these steps it will be placed in `~/vivado_design`.
+Go to the exported `.xsa` (most likely in the vivado project directory) file and copy it to the Ubuntu VM. In these steps it will be placed in `~/vivado_design`.
 
 ```sh
 $ mkdir ~/vivado_design
