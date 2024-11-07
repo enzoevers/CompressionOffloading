@@ -25,12 +25,12 @@ Install the recommended packages for this reposity (see `./vscode/extensions.jso
     1. Install MSYS2: https://www.msys2.org/
     2. Open MSYS2 and run `pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain`
     3. Add the MinGW-w64 bin folder (most likely `C:\msys64\ucrt64\bin`) to the Windows PATH
-- Install **CMake**: https://cmake.org/download/
+- Install **CMake**: https://cmake.org/download/ (>= 3.28)
 
 ## Linux
 
 - Install **C development packages**: `$ apt install build-essential` 
-- Install **CMake**: https://cmake.org/download/
+- Install **CMake**: https://cmake.org/download/ (>= 3.28)
 
 # Verify
 Now you should be able build and run:
@@ -44,6 +44,11 @@ $ python ./Scripts/BuildAndInstallExternalLibs.py
 $ python ./Scripts/BuildAndInstallCoDeLib.py
 $ python ./Scripts/BuildBenchmark.py
 $ python ./Scripts/RunBenchmark.py
+$ python ./Scripts/RunTest.py
+$
+$ python ./Scripts/BuildAndInstallExternalLibs.py --TargetPlatform zynq
+$ python ./Scripts/BuildAndInstallCoDeLib.py --TargetPlatform zynq
+$ python ./Scripts/BuildBenchmark.py --TargetPlatform zynq
 ```
 
 Additionally, you should be able to set breakpoints in the source code and run the code and debugger via the Visual Studio Code UI.

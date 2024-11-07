@@ -1,0 +1,7 @@
+prefix=/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr
+includedir=${prefix}/include
+
+Name: wayland-egl-backend
+Description: Backend wayland-egl interface
+Version: 3
+Cflags: -I${includedir}

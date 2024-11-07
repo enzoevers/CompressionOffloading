@@ -1,0 +1,12 @@
+prefix=/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr
+exec_prefix=/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr
+libdir=/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr/lib
+includedir=/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr/include
+
+Name: libnsl
+Description: Library containing NIS functions using TI-RPC (IPv6 enabled)
+Requires: libtirpc >= 1.0.1
+Version: 2.0.0
+Libs: -L/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr/lib -lnsl
+Cflags: -I/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr/include
+

@@ -1,0 +1,23 @@
+[binaries]
+c = @CC
+cpp = @CXX
+ar = @AR
+nm = @NM
+strip = @STRIP
+pkgconfig = 'pkg-config'
+
+[built-in options]
+c_args = @CFLAGS
+c_link_args = @LDFLAGS
+cpp_args = @CPPFLAGS
+cpp_link_args = @LDFLAGS
+
+[properties]
+needs_exe_wrapper = true
+sys_root = @OECORE_TARGET_SYSROOT
+
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'

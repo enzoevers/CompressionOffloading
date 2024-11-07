@@ -11,7 +11,7 @@ on:
       - "**.hpp"
 
 jobs:
-  build_run_targets:
+  build_benchmark_test_ubuntu:
     runs-on: ubuntu-22.04
     timeout-minutes: 15
     permissions:
@@ -26,7 +26,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-            
       - run: |
           python -u Scripts/CheckFormattingAll_c_h_cpp_hpp.py
           python -u Scripts/BuildAndInstallExternalLibs.py
@@ -34,7 +33,74 @@ jobs:
           python -u Scripts/RunTest.py
           python -u Scripts/BuildBenchmark.py
           python -u Scripts/RunBenchmark.py
-
       - uses: thollander/actions-comment-pull-request@v2
         with:
           filePath: BenchmarkResults.txt
+
+  build_benchmark_test_windows:
+    runs-on: windows-2022
+    timeout-minutes: 15
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: jwlawson/actions-setup-cmake@v1.14
+        with:
+          cmake-version: "3.30.x"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          python -u Scripts/CheckFormattingAll_c_h_cpp_hpp.py
+          python -u Scripts/BuildAndInstallExternalLibs.py
+          python -u Scripts/BuildAndInstallCoDeLib.py
+          python -u Scripts/RunTest.py
+          python -u Scripts/BuildBenchmark.py
+          python -u Scripts/RunBenchmark.py
+      - uses: thollander/actions-comment-pull-request@v2
+        with:
+          filePath: BenchmarkResults.txt
+
+  # build_linux_for_zynq_on_ubuntu:
+  #   runs-on: ubuntu-22.04
+  #   timeout-minutes: 15
+  #   permissions:
+  #     pull-requests: write
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         submodules: recursive
+  #     - uses: jwlawson/actions-setup-cmake@v1.14
+  #       with:
+  #         cmake-version: "3.30.x"
+  #     - uses: actions/setup-python@v5
+  #       with:
+  #         python-version: '3.11'
+  #     - run: |
+  #         python -u Scripts/CheckFormattingAll_c_h_cpp_hpp.py
+  #         python -u Scripts/BuildAndInstallExternalLibs.py --TargetPlatform zynq
+  #         python -u Scripts/BuildAndInstallCoDeLib.py --TargetPlatform zynq
+  #         python -u Scripts/BuildBenchmark.py --TargetPlatform zynq
+
+  build_linux_for_zynq_on_windows:
+    runs-on: windows-2022
+    timeout-minutes: 15
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: jwlawson/actions-setup-cmake@v1.14
+        with:
+          cmake-version: "3.30.x"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          python -u Scripts/CheckFormattingAll_c_h_cpp_hpp.py
+          python -u Scripts/BuildAndInstallExternalLibs.py --TargetPlatform zynq
+          python -u Scripts/BuildAndInstallCoDeLib.py --TargetPlatform zynq
+          python -u Scripts/BuildBenchmark.py --TargetPlatform zynq

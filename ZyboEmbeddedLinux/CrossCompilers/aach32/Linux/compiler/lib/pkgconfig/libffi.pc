@@ -1,0 +1,11 @@
+prefix=/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr
+exec_prefix=/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr
+libdir=/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr/lib
+toolexeclibdir=${libdir}
+includedir=/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr/include
+
+Name: libffi
+Description: Library supporting Foreign Function Interfaces
+Version: 3.4.4
+Libs: -L${toolexeclibdir} -lffi
+Cflags: -I${includedir}

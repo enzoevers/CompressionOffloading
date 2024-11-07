@@ -1,79 +1,102 @@
 import os
 from pathlib import Path
 import subprocess
+import EnvironmentConfig
+import argparse
+
+parser = argparse.ArgumentParser(description="Build and install external libraries")
+
+targetPlatformOptions = ["host", "zynq"]
+
+parser.add_argument(
+    "--TargetPlatform",
+    action="store",
+    dest="targetPlatform",
+    choices=targetPlatformOptions,
+    default="host",
+    help="Target platform (default: %(default)s)",
+)
+
+args = parser.parse_args()
+
+targetPlatform: EnvironmentConfig.Platform
+match args.targetPlatform:
+    case "host":
+        targetPlatform = EnvironmentConfig.Platform.OsNameToPlatform(os.name)
+    case "zynq":
+        targetPlatform = EnvironmentConfig.Platform.ZYNQ
+    case _:
+        raise Exception("Unsupported target platform: {}".format(args.targetPlatform))
+
 
 CurrentScriptPath = Path(os.path.dirname(os.path.abspath(__file__)))
 RepositoryRootPath = Path(CurrentScriptPath.parent)
-BenchmarkRootPath = Path(RepositoryRootPath / "Benchmark")
-BuildDirectory = Path(BenchmarkRootPath / "Build")
-CoDeLibInstallDirectory = Path(RepositoryRootPath / "CoDeLib" / "Install")
 ExternalLibPath = Path(RepositoryRootPath / "External")
-ExternalLibInstallPath = Path(ExternalLibPath / "Install")
+CoDeLibPath = Path(RepositoryRootPath / "CoDeLib")
 
-if not BuildDirectory.exists():
-    BuildDirectory.mkdir(parents=True)
 
 os.chdir(RepositoryRootPath)
 
 
-def GetGCCPath() -> str:
-    # Check if Windows, Linux or MacOS and return the path to the GCC compiler
-    # using a build in command
-    platform = os.name
-    if platform == "nt":
-        # Windows
-        return (
-            subprocess.check_output("where gcc", shell=True)
-            .decode("utf-8")
-            .split("\n")[0]
-        )
-    elif platform == "posix":
-        # Linux or MacOS
-        return (
-            subprocess.check_output("which gcc", shell=True)
-            .decode("utf-8")
-            .split("\n")[0]
-        )
-    else:
-        raise Exception("Unknown platform: {}".format(platform))
+def BuildBenchmark(
+    buildEnv: EnvironmentConfig.EnvironmentConfiguration,
+    buildConfig: EnvironmentConfig.BuildConfig = EnvironmentConfig.BuildConfig.DEBUG,
+):
+    ProjectName = "Benchmark"
+
+    BuildTypeString = EnvironmentConfig.BuildConfig.ToCMakeBuildType(buildConfig)
+    targetPlatformString = EnvironmentConfig.Platform.PlatformToOsName(
+        buildEnv.GetTargetPlatform()
+    )
+
+    CoDeLibInstallDirectory = Path(
+        CoDeLibPath / "Install" / targetPlatformString / BuildTypeString
+    )
+    ExternalLibInstallPath = Path(
+        ExternalLibPath / "Install" / targetPlatformString / BuildTypeString
+    )
+
+    BenchmarkRootPath = Path(RepositoryRootPath / ProjectName)
+    BuildDirectory = Path(
+        BenchmarkRootPath / "Build" / targetPlatformString / BuildTypeString
+    )
+
+    if not BuildDirectory.exists():
+        BuildDirectory.mkdir(parents=True)
+
+    os.chdir(RepositoryRootPath)
+
+    print("==============================")
+    print(ProjectName + ": Configuring ({})".format(BuildTypeString))
+    print("==============================")
+    configureCommand = 'cmake -G "{0}" -DCMAKE_TOOLCHAIN_FILE="{1}" -DCMAKE_PREFIX_PATH="{2}" -S {3} -B {4} -DZLIB_ROOT="{5}" -DCMAKE_BUILD_TYPE={6}'.format(
+        buildEnv.GetCmakeGenerator(),
+        buildEnv.GetCustomToolChainPath(),
+        CoDeLibInstallDirectory,
+        BenchmarkRootPath,
+        BuildDirectory,
+        ExternalLibInstallPath,
+        BuildTypeString,
+    )
+    subprocess.run(
+        configureCommand,
+        shell=True,
+        check=True,
+    )
+
+    print("==============================")
+    print(ProjectName + ": Building ({})".format(BuildTypeString))
+    print("==============================")
+    buildCommand = "cmake --build {0}".format(BuildDirectory)
+    subprocess.run(
+        buildCommand,
+        shell=True,
+        check=True,
+    )
 
 
-def GetCmakeGenerator() -> str:
-    platform = os.name
-    if platform == "nt":
-        # Windows
-        return "MinGW Makefiles"
-    elif platform == "posix":
-        # Linux or MacOS
-        return "Unix Makefiles"
-    else:
-        raise Exception("Unknown platform: {}".format(platform))
-
-
-GCCPath = GetGCCPath()
-CmakeGenerator = GetCmakeGenerator()
-print("GCCPath: {}".format(GCCPath))
-print("CmakeGenerator: {}".format(CmakeGenerator))
-
-print("Configuring CMake")
-configureCommand = 'cmake -G "{0}" -DCMAKE_C_COMPILER="{1}" -DCMAKE_PREFIX_PATH="{2}" -DCMAKE_BUILD_TYPE=Debug -S {3} -B {4} -DZLIB_ROOT="{5}"'.format(
-    CmakeGenerator,
-    GCCPath,
-    CoDeLibInstallDirectory,
-    BenchmarkRootPath,
-    BuildDirectory,
-    ExternalLibInstallPath,
+BuildEnv = EnvironmentConfig.EnvironmentConfiguration(
+    RepositoryRootPath, targetPlatform
 )
-subprocess.run(
-    configureCommand,
-    shell=True,
-    check=True,
-)
-
-print("Building Benchmark")
-buildCommand = "cmake --build {0} --config Debug".format(BuildDirectory)
-subprocess.run(
-    buildCommand,
-    shell=True,
-    check=True,
-)
+BuildBenchmark(BuildEnv, EnvironmentConfig.BuildConfig.DEBUG)
+BuildBenchmark(BuildEnv, EnvironmentConfig.BuildConfig.RELEASE)
