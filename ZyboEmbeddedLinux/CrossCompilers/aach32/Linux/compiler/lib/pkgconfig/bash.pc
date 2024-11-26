@@ -1,0 +1,28 @@
+# bash.pc.in
+
+prefix=/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr
+exec_prefix=/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr
+includedir=/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr/include
+libdir=/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr/lib
+
+loadablesdir=${libdir}/bash
+headersdir=${includedir}/bash
+
+LOCAL_CFLAGS = 
+LOCAL_DEFS = -DSHELL
+CCFLAGS = ${LOCAL_DEFS} ${LOCAL_CFLAGS}
+
+CC = x86_64-petalinux-linux-gcc  --sysroot=/home/linuxbox/petalinux/BasicLinuxZybo/build/tmp/work/x86_64-nativesdk-petalinux-linux/nativesdk-bash/5.1.16-r0/recipe-sysroot
+SHOBJ_CC = x86_64-petalinux-linux-gcc --sysroot=/home/linuxbox/petalinux/BasicLinuxZybo/build/tmp/work/x86_64-nativesdk-petalinux-linux/nativesdk-bash/5.1.16-r0/recipe-sysroot
+SHOBJ_CFLAGS = -fPIC
+SHOBJ_LD = ${CC}
+SHOBJ_LDFLAGS = -shared -Wl,-soname,$@
+SHOBJ_XLDFLAGS = 
+SHOBJ_LIBS = 
+
+Name: bash
+Description: Bash headers for bash loadable builtins
+Version: 5.1-release
+Url: 
+Libs: ${SHOBJ_LIBS}
+Cflags: ${SHOBJ_CFLAGS} ${CCFLAGS} -I${headersdir} -I${headersdir}/builtins -I${headersdir}/include

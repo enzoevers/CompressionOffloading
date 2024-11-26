@@ -1,0 +1,23 @@
+[binaries]
+c = ['arm-xilinx-linux-gnueabi-gcc', '-mthumb', '-mfpu=neon', '-mfloat-abi=hard', '-mcpu=cortex-a9', '-fstack-protector-strong', '-O2', '-D_FORTIFY_SOURCE=2', '-Wformat', '-Wformat-security', '-Werror=format-security', '--sysroot=/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/cortexa9t2hf-neon-xilinx-linux-gnueabi']
+cpp = ['arm-xilinx-linux-gnueabi-g++', '-mthumb', '-mfpu=neon', '-mfloat-abi=hard', '-mcpu=cortex-a9', '-fstack-protector-strong', '-O2', '-D_FORTIFY_SOURCE=2', '-Wformat', '-Wformat-security', '-Werror=format-security', '--sysroot=/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/cortexa9t2hf-neon-xilinx-linux-gnueabi']
+ar = 'arm-xilinx-linux-gnueabi-ar'
+nm = 'arm-xilinx-linux-gnueabi-nm'
+strip = 'arm-xilinx-linux-gnueabi-strip'
+pkgconfig = 'pkg-config'
+
+[built-in options]
+c_args = ['-O2', '-pipe', '-g', '-feliminate-unused-debug-types']
+c_link_args = ['-Wl,-O1', '-Wl,--hash-style=gnu', '-Wl,--as-needed', '-Wl,-z,relro,-z,now']
+cpp_args = []
+cpp_link_args = ['-Wl,-O1', '-Wl,--hash-style=gnu', '-Wl,--as-needed', '-Wl,-z,relro,-z,now']
+
+[properties]
+needs_exe_wrapper = true
+sys_root = '/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/cortexa9t2hf-neon-xilinx-linux-gnueabi'
+
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'

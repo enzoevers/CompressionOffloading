@@ -1,0 +1,16 @@
+[binaries]
+c = 'gcc'
+cpp = 'g++'
+ar = 'ar'
+nm = 'nm'
+strip = 'strip'
+readelf = 'readelf'
+pkgconfig = 'pkg-config-native'
+
+[built-in options]
+c_args = ['-isystem/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr/include' , '-O2', '-pipe']
+c_link_args = ['-L/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr/lib', '-L/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/lib', '-Wl,-rpath-link,/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr/lib', '-Wl,-rpath-link,/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/lib', '-Wl,--allow-shlib-undefined', '-Wl,--dynamic-linker=/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/lib/ld-linux-x86-64.so.2']
+cpp_args = ['-isystem/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr/include' , '-O2', '-pipe']
+cpp_link_args = ['-L/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr/lib', '-L/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/lib', '-Wl,-rpath-link,/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr/lib', '-Wl,-rpath-link,/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/lib', '-Wl,--allow-shlib-undefined', '-Wl,--dynamic-linker=/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/lib/ld-linux-x86-64.so.2']
+[properties]
+sys_root = '/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux'

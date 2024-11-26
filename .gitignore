@@ -1,5 +1,6 @@
 # CMAKE generated files
 Build
+build
 Install
 
 # Visual studio generated files
@@ -12,3 +13,10 @@ Benchmark/Files/*.decompressed.*
 
 # Test generated files
 Test*.txt*
+
+# Python
+__pycache__/
+
+# Custom
+AddedFlags.cmake
+tmp

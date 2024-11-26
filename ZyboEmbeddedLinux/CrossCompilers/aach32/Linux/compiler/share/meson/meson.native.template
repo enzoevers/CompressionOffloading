@@ -1,0 +1,16 @@
+[binaries]
+c = 'gcc'
+cpp = 'g++'
+ar = 'ar'
+nm = 'nm'
+strip = 'strip'
+readelf = 'readelf'
+pkgconfig = 'pkg-config-native'
+
+[built-in options]
+c_args = ['-isystem@{OECORE_NATIVE_SYSROOT}/usr/include' , '-O2', '-pipe']
+c_link_args = ['-L@{OECORE_NATIVE_SYSROOT}/usr/lib', '-L@{OECORE_NATIVE_SYSROOT}/lib', '-Wl,-rpath-link,@{OECORE_NATIVE_SYSROOT}/usr/lib', '-Wl,-rpath-link,@{OECORE_NATIVE_SYSROOT}/lib', '-Wl,--allow-shlib-undefined', '-Wl,--dynamic-linker=@{OECORE_NATIVE_SYSROOT}/lib/ld-linux-x86-64.so.2']
+cpp_args = ['-isystem@{OECORE_NATIVE_SYSROOT}/usr/include' , '-O2', '-pipe']
+cpp_link_args = ['-L@{OECORE_NATIVE_SYSROOT}/usr/lib', '-L@{OECORE_NATIVE_SYSROOT}/lib', '-Wl,-rpath-link,@{OECORE_NATIVE_SYSROOT}/usr/lib', '-Wl,-rpath-link,@{OECORE_NATIVE_SYSROOT}/lib', '-Wl,--allow-shlib-undefined', '-Wl,--dynamic-linker=@{OECORE_NATIVE_SYSROOT}/lib/ld-linux-x86-64.so.2']
+[properties]
+sys_root = '@OECORE_NATIVE_SYSROOT'

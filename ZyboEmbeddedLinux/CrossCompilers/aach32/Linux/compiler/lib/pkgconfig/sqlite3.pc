@@ -1,0 +1,13 @@
+# Package Information for pkg-config
+
+prefix=/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr
+exec_prefix=/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr
+libdir=/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr/lib
+includedir=/home/linuxbox/petalinux/BasicLinuxZybo/images/linux/sdk/sysroots/x86_64-petalinux-linux/usr/include
+
+Name: SQLite
+Description: SQL database engine
+Version: 3.39.3
+Libs: -L${libdir} -lsqlite3
+Libs.private: -lm 
+Cflags: -I${includedir}
