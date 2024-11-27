@@ -177,7 +177,7 @@ From the "<some path>\VitisWorkspace\logs\vitis.log" file it could be seen there
 
 Install cmake: https://cmake.org/download/
 
-> Note: for the application in this repository the compiler `"C:\Xilinx\Vitis\2024.1\gnu\aarch32\nt\gcc-arm-linux-gnueabi\x86_64-petalinux-mingw32\usr\bin\arm-xilinx-linux-gnueabi\arm-xilinx-linux-gnueabi-gcc.exe"` is used instead. But for the example in this document using this compiler is fine.
+> Note: for the application in this repository the compiler `"C:\Xilinx\Vitis\2024.1\gnu\aarch32\nt\gcc-arm-linux-gnueabi\x86_64-petalinux-mingw32\usr\bin\arm-xilinx-linux-gnueabi\arm-xilinx-linux-gnueabi-gcc.exe"` is used instead. For this compiler to work it is required to add the following flags when setting `CMAKE_C_COMPILER`: `set(CMAKE_C_COMPILER "C:/Xilinx/Vitis/2024.1/gnu/aarch32/nt/gcc-arm-linux-gnueabi/x86_64-petalinux-mingw32/usr/bin/arm-xilinx-linux-gnueabi/arm-xilinx-linux-gnueabi-gcc.exe -mthumb -mfpu=neon -mfloat-abi=hard -mcpu=cortex-a9 -fstack-protector-strong -O2 -D_FORTIFY_SOURCE=2 -Wformat -Wformat-security -Werror=format-security") But for the example in this document using this compiler is fine.
 
 ```ps
 PS > $env:path = "${env:path};C:/Xilinx/Vitis/2024.1/gnu/aarch32/nt/gcc-arm-linux-gnueabi/bin"
