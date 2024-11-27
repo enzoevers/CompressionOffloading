@@ -1,4 +1,5 @@
 import os
+import stat
 from pathlib import Path
 import subprocess
 import re
@@ -120,6 +121,13 @@ def RunBenchmark(
         print(BenchmarkHeader, end="")
 
         BenchmarkExecutablePath = Path(BuildDirectory / BenchmarkName)
+        if targetPlatform == EnvironmentConfig.Platform.WINDOWS:
+            BenchmarkExecutablePath = BenchmarkExecutablePath.with_suffix(".exe")
+
+        BenchmarkExecutablePath.chmod(
+            BenchmarkExecutablePath.stat().st_mode | stat.S_IEXEC
+        )
+
         BenchmarkCommand = str(BenchmarkExecutablePath) + " " + BenchmarkOptions
         print("Command: {}".format(BenchmarkCommand))
 

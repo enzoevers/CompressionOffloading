@@ -1,0 +1,112 @@
+on:
+  workflow_call:
+    inputs:
+      runner:
+        description: 'The runner to use for the job. Must be a runner-name available from GitHub actions.'
+        required: true
+        type: string
+      host-platform:
+        description: 'The host platform to use for the job. Must be the same type as the runnner. Options: [ubuntu | windows]'
+        required: true
+        type: string
+      target-platform:
+        description: 'The target platform to use for the job. Options: [host | zynq]'
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ${{ inputs.runner }}
+    name : Build (Target ${{ inputs.target-platform }} - Host ${{ inputs.host-platform }})
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: jwlawson/actions-setup-cmake@v1.14
+        with:
+          cmake-version: "3.30.x"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          python -u Scripts/BuildAndInstallExternalLibs.py --TargetPlatform ${{ inputs.target-platform }}
+          python -u Scripts/BuildAndInstallCoDeLib.py --TargetPlatform ${{ inputs.target-platform }}
+          python -u Scripts/BuildBenchmark.py --TargetPlatform ${{ inputs.target-platform }}
+      - name: 'Upload CoDeLib build artifacts'
+        uses: actions/upload-artifact@v4
+        with:
+          name: CoDeLibBuildArtifacts-target-${{ inputs.target-platform }}-host-${{ inputs.host-platform }}
+          path: CoDeLib/Build
+          retention-days: 1
+      - name: 'Upload benchmark build artifacts'
+        uses: actions/upload-artifact@v4
+        with:
+          name: BenchmarkBuildArtifacts-target-${{ inputs.target-platform }}-host-${{ inputs.host-platform }}
+          path: Benchmark/Build
+          retention-days: 1
+
+  test:
+    if: ${{ inputs.target-platform == 'host' }} 
+    runs-on: ${{ inputs.runner }}
+    name : Test (Target ${{ inputs.target-platform }} - Host ${{ inputs.host-platform }})
+    needs: build
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          name: CoDeLibBuildArtifacts-target-${{ inputs.target-platform }}-host-${{ inputs.host-platform }}
+          path: CoDeLib/Build
+      - run: |
+          python -u Scripts/RunTest.py
+      - name: 'Upload test results'
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestResults-target-${{ inputs.target-platform }}-host-${{ inputs.host-platform }}.txt
+          path: TestResults.txt
+          retention-days: 1
+
+  benchmark:
+    if: ${{ inputs.target-platform == 'host' }} 
+    runs-on: ${{ inputs.runner }}
+    name : Benchmark (Target ${{ inputs.target-platform }} - Host ${{ inputs.host-platform }})
+    needs: build
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          name: BenchmarkBuildArtifacts-target-${{ inputs.target-platform }}-host-${{ inputs.host-platform }}
+          path: Benchmark/Build
+      - run: |
+          python -u Scripts/RunBenchmark.py
+      - name: 'Upload benchmark results'
+        uses: actions/upload-artifact@v4
+        with:
+          name: BenchmarkResults-target-${{ inputs.target-platform }}-host-${{ inputs.host-platform }}
+          path: BenchmarkResults.txt
+          retention-days: 1
+
+  comment_benchmark_results:
+    if: ${{ github.branch != 'main' }}
+    runs-on: ${{ inputs.runner }}
+    name: Comment Benchmark Results (Target ${{ inputs.target-platform }} - Host ${{ inputs.host-platform }})
+    needs: benchmark
+    timeout-minutes: 15
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: BenchmarkResults-target-${{ inputs.target-platform }}-host-${{ inputs.host-platform }}
+      - uses: thollander/actions-comment-pull-request@v2
+        with:
+          filePath: BenchmarkResults.txt
