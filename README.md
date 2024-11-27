@@ -20,9 +20,9 @@ Note that all development should keep the following targets in mind:
 ## Plan
 1. Use the [zlib library](https://www.zlib.net/) to compress and decompress ([example](https://zlib.net/zlib_how.html)). This should run on both Deskptop and the Zynq Processing System (PS).
     - A single file
-        - [ ] DEFLATE -> compressed data file
+        - [x] DEFLATE -> compressed data file
         - [ ] DEFLATE -> ZIP file
-        - [ ] compressed data file -> INFLATE
+        - [x] compressed data file -> INFLATE
         - [ ] ZIP file -> INFLATE
     - Multiple files
         - [ ] DEFLATE -> ZIP file
