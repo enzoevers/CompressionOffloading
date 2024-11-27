@@ -95,7 +95,7 @@ jobs:
           retention-days: 1
 
   comment_benchmark_results:
-    if: ${{ github.branch != 'main' }}
+    if: ${{ github.ref != 'refs/heads/main' }}
     runs-on: ${{ inputs.runner }}
     name: Comment Benchmark Results (Target ${{ inputs.target-platform }} - Host ${{ inputs.host-platform }})
     needs: benchmark
