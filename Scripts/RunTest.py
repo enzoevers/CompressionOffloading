@@ -1,4 +1,5 @@
 import os
+import stat
 from pathlib import Path
 import subprocess
 import EnvironmentConfig
@@ -107,6 +108,11 @@ def RunTests(
         print(testHeader, end="")
 
         TestExecutablePath = Path(CoDeLibBuildPath / "Test" / testName)
+        if targetPlatform == EnvironmentConfig.Platform.WINDOWS:
+            TestExecutablePath = TestExecutablePath.with_suffix(".exe")
+
+        TestExecutablePath.chmod(TestExecutablePath.stat().st_mode | stat.S_IEXEC)
+
         TestOptions = '"' + str(BenchmarkTestFilesPath) + '/"'
         TestCommand = str(TestExecutablePath) + " " + TestOptions
 
