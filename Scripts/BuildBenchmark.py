@@ -52,8 +52,8 @@ def BuildBenchmark(
     CoDeLibInstallDirectory = Path(
         CoDeLibPath / "Install" / targetPlatformString / BuildTypeString
     )
-    ExternalLibInstallPath = Path(
-        ExternalLibPath / "Install" / targetPlatformString / BuildTypeString
+    ExternalZlibLibInstallPath = Path(
+        ExternalLibPath / "zlib/Install" / targetPlatformString / BuildTypeString
     )
 
     BenchmarkRootPath = Path(RepositoryRootPath / ProjectName)
@@ -75,7 +75,7 @@ def BuildBenchmark(
         CoDeLibInstallDirectory,
         BenchmarkRootPath,
         BuildDirectory,
-        ExternalLibInstallPath,
+        ExternalZlibLibInstallPath,
         BuildTypeString,
     )
     subprocess.run(

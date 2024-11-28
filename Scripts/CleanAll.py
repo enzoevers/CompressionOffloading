@@ -14,15 +14,15 @@ CoDeLibBuildPath = Path(CoDeLibPath / "Build")
 CoDeLibInstallPath = Path(CoDeLibPath / "Install")
 
 ExternalLibPath = Path(ProjectRootPath / "External")
-ExternalLibBuildPath = Path(ExternalLibPath / "Build")
-ExternalLibInstallPath = Path(ExternalLibPath / "Install")
+ExternalZlibLibBuildPath = Path(ExternalLibPath / "zlib/Build")
+ExternalZlibLibInstallPath = Path(ExternalLibPath / "zlib/Install")
 
 DirectoriesToRemove = [
     BenchmarkBuildPath,
     CoDeLibBuildPath,
     CoDeLibInstallPath,
-    ExternalLibBuildPath,
-    ExternalLibInstallPath,
+    ExternalZlibLibBuildPath,
+    ExternalZlibLibInstallPath,
 ]
 
 

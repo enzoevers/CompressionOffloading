@@ -52,10 +52,14 @@ def BuildAndInstallZlib(
 
     TopLevelCMakeListsDirectory = Path(ExternalLibPath / ProjectName)
     BuildDirectory = Path(
-        ExternalLibPath / "Build" / ProjectName / targetPlatformString / BuildTypeString
+        ExternalLibPath / ProjectName / "Build" / targetPlatformString / BuildTypeString
     )
     InstallDirectory = Path(
-        ExternalLibPath / "Install" / targetPlatformString / BuildTypeString
+        ExternalLibPath
+        / ProjectName
+        / "Install"
+        / targetPlatformString
+        / BuildTypeString
     )
 
     if not BuildDirectory.exists():
