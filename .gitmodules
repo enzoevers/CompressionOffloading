@@ -1,3 +1,6 @@
 [submodule "External/zlib"]
 	path = External/zlib
 	url = https://github.com/madler/zlib.git
+[submodule "External/minizip-ng"]
+	path = External/minizip-ng
+	url = https://github.com/zlib-ng/minizip-ng
