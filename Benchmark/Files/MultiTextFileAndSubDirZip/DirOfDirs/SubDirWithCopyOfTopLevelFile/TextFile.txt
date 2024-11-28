@@ -1,0 +1,3 @@
+The 3rd file contains
+
+an empty line on line 2.

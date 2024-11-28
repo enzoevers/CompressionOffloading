@@ -291,6 +291,9 @@ bool FilesAreEqual(FILE *pFile1, FILE *pFile2) {
     const size_t fileSize2 = GetFileSizeInBytes(pFile2);
 
     if (fileSize1 != fileSize2) {
+        printf("File sizes not equal:\n");
+        printf("    fileSize1: %lu\n", (unsigned long)fileSize1);
+        printf("    fileSize2: %lu\n", (unsigned long)fileSize2);
         return false;
     }
 
@@ -306,6 +309,9 @@ bool FilesAreEqual(FILE *pFile1, FILE *pFile2) {
         bytesRead2 = fread(buffer2, 1, bufferSize, pFile2);
 
         if (bytesRead1 != bytesRead2) {
+            printf("Bytes read not equal:\n");
+            printf("    bytesRead1: %lu\n", (unsigned long)bytesRead1);
+            printf("    bytesRead2: %lu\n", (unsigned long)bytesRead2);
             return false;
         }
 
@@ -315,12 +321,16 @@ bool FilesAreEqual(FILE *pFile1, FILE *pFile2) {
         const int errorFile2 = ferror(pFile2);
         if ((eofFile1 && !eofFile2) || (!eofFile1 && eofFile2)) {
             printf("EOF indicator set only by one file\n");
+            return false;
         } else if ((!eofFile1 && errorFile1) || (!eofFile2 && errorFile2)) {
             printf("Error indicator set");
             return false;
         }
 
         if (memcmp(buffer1, buffer2, bytesRead1) != 0) {
+            printf("Buffers not equal\n");
+            printf("    buffer1: %s\n", buffer1);
+            printf("    buffer2: %s\n", buffer2);
             return false;
         }
     } while (bytesRead1 > 0);
