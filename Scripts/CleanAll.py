@@ -16,6 +16,8 @@ CoDeLibInstallPath = Path(CoDeLibPath / "Install")
 ExternalLibPath = Path(ProjectRootPath / "External")
 ExternalZlibLibBuildPath = Path(ExternalLibPath / "zlib/Build")
 ExternalZlibLibInstallPath = Path(ExternalLibPath / "zlib/Install")
+ExternalMinizipNgLibBuildPath = Path(ExternalLibPath / "minizip-ng/Build")
+ExternalMinizipNgLibInstallPath = Path(ExternalLibPath / "minizip-ng/Install")
 
 DirectoriesToRemove = [
     BenchmarkBuildPath,
@@ -23,6 +25,8 @@ DirectoriesToRemove = [
     CoDeLibInstallPath,
     ExternalZlibLibBuildPath,
     ExternalZlibLibInstallPath,
+    ExternalMinizipNgLibBuildPath,
+    ExternalMinizipNgLibInstallPath,
 ]
 
 

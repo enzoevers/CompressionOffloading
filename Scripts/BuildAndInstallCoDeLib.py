@@ -49,6 +49,9 @@ def BuildAndInstallCoDeLib(
     ExternalZlibLibInstallPath = Path(
         ExternalLibPath / "zlib/Install" / targetPlatformString / BuildTypeString
     )
+    ExternalMinizipNgLibInstallPath = Path(
+        ExternalLibPath / "minizip-ng/Install" / targetPlatformString / BuildTypeString
+    )
 
     CoDeLibRootPath = Path(RepositoryRootPath / ProjectName)
     BuildDirectory = Path(
@@ -70,14 +73,15 @@ def BuildAndInstallCoDeLib(
     print("==============================")
     print(ProjectName + ": Configuring ({})".format(BuildTypeString))
     print("==============================")
-    configureCommand = 'cmake -G "{0}" -DCMAKE_TOOLCHAIN_FILE="{1}" -S "{2}" -B "{3}" -DCMAKE_INSTALL_PREFIX="{4}" -DZLIB_ROOT="{5}" -DCMAKE_BUILD_TYPE={6}'.format(
+    configureCommand = 'cmake -G "{0}" -DCMAKE_TOOLCHAIN_FILE="{1}" -S "{2}" -B "{3}" -DCMAKE_INSTALL_PREFIX="{4}" -DCMAKE_BUILD_TYPE={5} -DZLIB_ROOT="{6}" -DCMAKE_PREFIX_PATH="{7}"'.format(
         buildEnv.GetCmakeGenerator(),
         buildEnv.GetCustomToolChainPath(),
         CoDeLibRootPath,
         BuildDirectory,
         InstallDirectory,
-        ExternalZlibLibInstallPath,
         BuildTypeString,
+        ExternalZlibLibInstallPath,
+        ExternalMinizipNgLibInstallPath,
     )
     print(configureCommand)
     subprocess.run(
