@@ -10,7 +10,6 @@ set(ZLIB_USE_STATIC_LIBS "ON")
 find_package(ZLIB REQUIRED)
 target_link_libraries(Deflate_zlib PRIVATE ZLIB::ZLIB)
 
-message(STATUS "CoDeLib_PUBLIC_INCLUDE_PATH: ${CoDeLib_PUBLIC_INCLUDE_PATH}")
 set(Deflate_zlib_PUBLIC_INCLUDE_PATH ${CoDeLib_PUBLIC_INCLUDE_PATH}/Deflate_zlib)
 set(Deflate_zlib_PUBLIC_HEADERS
     ${Deflate_zlib_PUBLIC_INCLUDE_PATH}/Deflate_zlib.h
