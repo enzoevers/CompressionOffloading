@@ -89,7 +89,7 @@ def BuildAndInstallCoDeLib(
     print("==============================")
     print(ProjectName + ": Building ({})".format(BuildTypeString))
     print("==============================")
-    buildCommand = "cmake --build {0}".format(BuildDirectory)
+    buildCommand = "cmake --build {0} -- -j 4".format(BuildDirectory)
     print(buildCommand)
     subprocess.run(
         buildCommand,
