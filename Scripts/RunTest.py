@@ -104,8 +104,6 @@ def RunTests(
             + "-----------------------------------------"
             + "\n"
         )
-        print("\n")
-        print(testHeader, end="")
 
         TestExecutablePath = Path(CoDeLibBuildPath / "Test" / testName)
         if targetPlatform == EnvironmentConfig.Platform.WINDOWS:
@@ -115,8 +113,6 @@ def RunTests(
 
         TestOptions = '"' + str(BenchmarkTestFilesPath) + '/"'
         TestCommand = str(TestExecutablePath) + " " + TestOptions
-
-        print("Command: {}".format(TestCommand))
 
         RawTestResultsFileNames.append(GetTestResultsFileRawName(buildConfig, testName))
 
@@ -156,3 +152,8 @@ AppendTestResultToTotalResultFile(TestResultsFileName, RawResultFiles)
 
 RawResultFiles = RunTests(BuildEnv, EnvironmentConfig.BuildConfig.RELEASE, TestList)
 AppendTestResultToTotalResultFile(TestResultsFileName, RawResultFiles)
+
+# Print the content of BenchmarkResultFileName to the console
+print("\n")
+with open(TestResultsFileName, "r") as file:
+    print(file.read())

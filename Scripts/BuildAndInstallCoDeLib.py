@@ -46,8 +46,8 @@ def BuildAndInstallCoDeLib(
         buildEnv.GetTargetPlatform()
     )
 
-    ExternalLibInstallPath = Path(
-        ExternalLibPath / "Install" / targetPlatformString / BuildTypeString
+    ExternalZlibLibInstallPath = Path(
+        ExternalLibPath / "zlib/Install" / targetPlatformString / BuildTypeString
     )
 
     CoDeLibRootPath = Path(RepositoryRootPath / ProjectName)
@@ -76,7 +76,7 @@ def BuildAndInstallCoDeLib(
         CoDeLibRootPath,
         BuildDirectory,
         InstallDirectory,
-        ExternalLibInstallPath,
+        ExternalZlibLibInstallPath,
         BuildTypeString,
     )
     print(configureCommand)
@@ -89,7 +89,7 @@ def BuildAndInstallCoDeLib(
     print("==============================")
     print(ProjectName + ": Building ({})".format(BuildTypeString))
     print("==============================")
-    buildCommand = "cmake --build {0}".format(BuildDirectory)
+    buildCommand = "cmake --build {0} -- -j 4".format(BuildDirectory)
     print(buildCommand)
     subprocess.run(
         buildCommand,

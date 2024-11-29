@@ -117,8 +117,6 @@ def RunBenchmark(
             + "-----------------------------------------"
             + "\n"
         )
-        print("\n")
-        print(BenchmarkHeader, end="")
 
         BenchmarkExecutablePath = Path(BuildDirectory / BenchmarkName)
         if targetPlatform == EnvironmentConfig.Platform.WINDOWS:
@@ -129,7 +127,6 @@ def RunBenchmark(
         )
 
         BenchmarkCommand = str(BenchmarkExecutablePath) + " " + BenchmarkOptions
-        print("Command: {}".format(BenchmarkCommand))
 
         RawBenchmarkResultsFileNames.append(
             GetBenchmarkResultsFileRawName(buildConfig, BenchmarkName)
@@ -177,3 +174,8 @@ RawResultFiles = RunBenchmark(
     BuildEnv, EnvironmentConfig.BuildConfig.RELEASE, BenchmarkList
 )
 AppendBenchmarkResultToTotalResultFile(BenchmarkResultFileName, RawResultFiles)
+
+# Print the content of BenchmarkResultFileName to the console
+print("\n")
+with open(BenchmarkResultFileName, "r") as file:
+    print(file.read())

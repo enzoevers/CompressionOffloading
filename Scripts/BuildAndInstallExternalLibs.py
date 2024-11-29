@@ -52,10 +52,14 @@ def BuildAndInstallZlib(
 
     TopLevelCMakeListsDirectory = Path(ExternalLibPath / ProjectName)
     BuildDirectory = Path(
-        ExternalLibPath / "Build" / ProjectName / targetPlatformString / BuildTypeString
+        ExternalLibPath / ProjectName / "Build" / targetPlatformString / BuildTypeString
     )
     InstallDirectory = Path(
-        ExternalLibPath / "Install" / targetPlatformString / BuildTypeString
+        ExternalLibPath
+        / ProjectName
+        / "Install"
+        / targetPlatformString
+        / BuildTypeString
     )
 
     if not BuildDirectory.exists():
@@ -88,7 +92,7 @@ def BuildAndInstallZlib(
     print("==============================")
     print(ProjectName + ": Building ({})".format(BuildTypeString))
     print("==============================")
-    buildCommand = "cmake --build {0}".format(BuildDirectory)
+    buildCommand = "cmake --build {0} -- -j 4".format(BuildDirectory)
     print(buildCommand)
     subprocess.run(
         buildCommand,
