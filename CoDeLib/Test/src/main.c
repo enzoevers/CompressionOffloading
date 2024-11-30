@@ -9,17 +9,18 @@ static void RunAllTests(void) {
 }
 
 int main(int argc, const char **argv) {
-    char *pFullPathToBenchmarkTestFiles;
+    RaiiString fullPathToBenchmarkTestFiles
+        __attribute__((cleanup(RaiiStringClean)));
 
     // TODO: use getopt(...)
     if (argc == 1) {
         printf("No arguments provided\n");
         return 1;
     } else {
-        pFullPathToBenchmarkTestFiles = (char *)argv[1];
+        fullPathToBenchmarkTestFiles = RaiiStringCreateFromCString(argv[1]);
     }
 
-    SetupTestDeflateInflateZlib(pFullPathToBenchmarkTestFiles);
+    SetupTestDeflateInflateZlib(fullPathToBenchmarkTestFiles.pString);
 
     return UnityMain(argc, argv, RunAllTests);
 }
