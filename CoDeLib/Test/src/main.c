@@ -3,7 +3,10 @@
 #include "TestDeflateInflateZlib.h"
 #include <CoDeLib/RaiiString/RaiiString.h>
 
-static void RunAllTests(void) { RUN_TEST_GROUP(TestDeflateInflateZlib); }
+static void RunAllTests(void) {
+    RUN_TEST_GROUP(TestRaiiString);
+    RUN_TEST_GROUP(TestDeflateInflateZlib);
+}
 
 int main(int argc, const char **argv) {
     char *pFullPathToBenchmarkTestFiles;

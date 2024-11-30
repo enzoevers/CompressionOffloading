@@ -1,5 +1,6 @@
 add_executable(CoDeLib_Test
     src/main.c
+    src/TestRaiiString.c
     src/TestDeflateInflateZlib.c)
 
 target_include_directories(CoDeLib_Test PUBLIC
