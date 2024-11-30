@@ -1,4 +1,4 @@
-#include "unity.h"
+#include "unity_fixture.h"
 #include <CoDeLib/Deflate_zlib/Deflate_zlib.h>
 #include <CoDeLib/Inflate_zlib/Inflate_zlib.h>
 #include <CoDeLib/RaiiString/RaiiString.h>
@@ -7,17 +7,23 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-char *g_pFullPathToBenchmarkTestFiles = NULL;
+static char *g_pFullPathToBenchmarkTestFiles = NULL;
 
-void setUp(void) {
-    // set stuff up here
+void SetupTestDeflateInflateZlib(char *pFullPathToBenchmarkTestFiles) {
+    g_pFullPathToBenchmarkTestFiles = pFullPathToBenchmarkTestFiles;
 }
 
-void tearDown(void) {
-    // clean stuff up here
+TEST_GROUP(TestDeflateInflateZlib);
+
+TEST_SETUP(TestDeflateInflateZlib) {
+    // Nothing
 }
 
-void test_InflateZlibWorkWithDeflateZlib(void) {
+TEST_TEAR_DOWN(TestDeflateInflateZlib) {
+    // Nothing
+}
+
+TEST(TestDeflateInflateZlib, test_InflateZlibWorkWithDeflateZlib) {
     FILE *pInFile = NULL;
     FILE *pOutCompressedFile = NULL;
     FILE *pOutDecompressedFile = NULL;
@@ -41,22 +47,12 @@ void test_InflateZlibWorkWithDeflateZlib(void) {
     TEST_ASSERT_GREATER_THAN(0, GetFileSizeInBytes(pOutDecompressedFile));
     TEST_ASSERT_EQUAL(INFLATE_SUCCESS, statusInflate);
 
-    FilesAreEqual(pInFile, pOutDecompressedFile);
+    TEST_ASSERT(FilesAreEqual(pInFile, pOutDecompressedFile));
     fclose(pInFile);
     fclose(pOutCompressedFile);
     fclose(pOutDecompressedFile);
 }
 
-int main(int argc, char **argv) {
-    // TODO: use getopt(...)
-    if (argc == 1) {
-        printf("No arguments provided\n");
-        return 1;
-    } else {
-        g_pFullPathToBenchmarkTestFiles = argv[1];
-    }
-
-    UNITY_BEGIN();
-    RUN_TEST(test_InflateZlibWorkWithDeflateZlib);
-    return UNITY_END();
+TEST_GROUP_RUNNER(TestDeflateInflateZlib) {
+    RUN_TEST_CASE(TestDeflateInflateZlib, test_InflateZlibWorkWithDeflateZlib);
 }
