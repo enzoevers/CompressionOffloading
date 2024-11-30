@@ -80,8 +80,9 @@ def RunTests(
     buildEnv: EnvironmentConfig.EnvironmentConfiguration,
     buildConfig: EnvironmentConfig.BuildConfig,
     testList: List[str],
-) -> List[str]:
+) -> tuple[bool, List[str]]:
     RawTestResultsFileNames = []
+    success = True
 
     BuildTypeString = EnvironmentConfig.BuildConfig.ToCMakeBuildType(buildConfig)
     targetPlatformString = EnvironmentConfig.Platform.PlatformToOsName(
@@ -118,18 +119,19 @@ def RunTests(
 
         TestResultsFileRaw = open(RawTestResultsFileNames[-1], "w")
 
-        subprocess.run(
+        result = subprocess.run(
             TestCommand,
             shell=True,
-            check=True,
+            check=False,
             stdout=TestResultsFileRaw,
         )
-
         PrependTestHeaderInRawResultsFile(testHeader, RawTestResultsFileNames[-1])
-
         TestResultsFileRaw.close()
 
-    return RawTestResultsFileNames
+        if result.returncode != 0:
+            success = False
+
+    return (success, RawTestResultsFileNames)
 
 
 # =====================================================================================
@@ -147,13 +149,21 @@ BuildEnv = EnvironmentConfig.EnvironmentConfiguration(
     RepositoryRootPath, targetPlatform
 )
 
-RawResultFiles = RunTests(BuildEnv, EnvironmentConfig.BuildConfig.DEBUG, TestList)
-AppendTestResultToTotalResultFile(TestResultsFileName, RawResultFiles)
+[successDebug, RawResultFilesDebug] = RunTests(
+    BuildEnv, EnvironmentConfig.BuildConfig.DEBUG, TestList
+)
+AppendTestResultToTotalResultFile(TestResultsFileName, RawResultFilesDebug)
 
-RawResultFiles = RunTests(BuildEnv, EnvironmentConfig.BuildConfig.RELEASE, TestList)
-AppendTestResultToTotalResultFile(TestResultsFileName, RawResultFiles)
+[successRelease, RawResultFilesRelease] = RunTests(
+    BuildEnv, EnvironmentConfig.BuildConfig.RELEASE, TestList
+)
+AppendTestResultToTotalResultFile(TestResultsFileName, RawResultFilesRelease)
 
 # Print the content of BenchmarkResultFileName to the console
 print("\n")
 with open(TestResultsFileName, "r") as file:
     print(file.read())
+
+if not successDebug or not successRelease:
+    print("Test failed")
+    exit(1)
