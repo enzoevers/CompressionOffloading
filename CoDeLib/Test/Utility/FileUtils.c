@@ -10,7 +10,7 @@ void CreateFullPathToFile(const RaiiString *pFullPath,
     assert(pBasePath != NULL);
     assert(pFileName != NULL);
     assert(pFullPath->pString != NULL);
-    assert(pFullPath->length >= maxFullPathStringSize);
+    assert(pFullPath->lengthWithTermination >= maxFullPathStringSize);
 
     const int charsWritten = snprintf(pFullPath->pString, maxFullPathStringSize,
                                       "%s%s", pBasePath, pFileName);
