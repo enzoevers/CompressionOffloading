@@ -1,6 +1,7 @@
 name: Pull Request Benchmark Workflow
 on:
   pull_request:
+    types: [opened, synchronize , reopened , labeled]
     paths:
       - ".github/workflows/*"
       - "Scripts/*"
