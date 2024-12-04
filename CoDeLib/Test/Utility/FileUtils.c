@@ -3,34 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-void CreateFullPathToFile(const RaiiString *pFullPath,
-                          const size_t maxFullPathStringSize,
-                          const char *pBasePath, const char *pFileName) {
-    assert(pFullPath != NULL);
-    assert(pBasePath != NULL);
-    assert(pFileName != NULL);
-    assert(pFullPath->pString != NULL);
-    assert(pFullPath->lengthWithTermination >= maxFullPathStringSize);
-
-    const int charsWritten = snprintf(pFullPath->pString, maxFullPathStringSize,
-                                      "%s%s", pBasePath, pFileName);
-
-    if (charsWritten < 0) {
-        printf("Failed to write to string\n");
-        exit(1);
-    }
-}
-
-void OpenFile(FILE **pInFile, char *basePath, char *pFilename,
-              char *pOpenMode) {
-    const size_t lengthPath = strlen(basePath) + strlen(pFilename) + 1;
-    RaiiString fullPathString __attribute__((cleanup(RaiiStringClean)));
-    fullPathString = RaiiStringCreate(lengthPath);
-    CreateFullPathToFile(&fullPathString, lengthPath, basePath, pFilename);
-
-    *pInFile = fopen(fullPathString.pString, pOpenMode);
+void OpenFile(FILE **pInFile, RaiiString *pFullPath, char *pOpenMode) {
+    *pInFile = fopen(pFullPath->pString, pOpenMode);
     if (*pInFile == NULL) {
-        printf("Failed to open file: %s\n", fullPathString.pString);
+        printf("Failed to open file: %s\n", pFullPath->pString);
         exit(1);
     }
 }

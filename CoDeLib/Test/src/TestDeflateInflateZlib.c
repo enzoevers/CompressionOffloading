@@ -28,12 +28,25 @@ TEST(TestDeflateInflateZlib, test_InflateZlibWorkWithDeflateZlib) {
     FILE *pOutCompressedFile = NULL;
     FILE *pOutDecompressedFile = NULL;
 
-    OpenFile(&pInFile, g_pFullPathToBenchmarkTestFiles,
-             "SmallBasicTextFile.txt", "r");
-    OpenFile(&pOutCompressedFile, g_pFullPathToBenchmarkTestFiles,
-             "SmallBasicTextFile.compressed.txt", "w+");
-    OpenFile(&pOutDecompressedFile, g_pFullPathToBenchmarkTestFiles,
-             "SmallBasicTextFile.decompressed.txt", "w+");
+    RAII_STRING pathToSmallBasicTextFile =
+        RaiiStringCreateFromCString(g_pFullPathToBenchmarkTestFiles);
+    RaiiStringAppend_cString(&pathToSmallBasicTextFile,
+                             "SmallBasicTextFile.txt");
+
+    RAII_STRING pathToSmallBasicTextFileCompressed =
+        RaiiStringCreateFromCString(g_pFullPathToBenchmarkTestFiles);
+    RaiiStringAppend_cString(&pathToSmallBasicTextFileCompressed,
+                             "SmallBasicTextFile.compressed.txt");
+
+    RAII_STRING pathToSmallBasicTextFileDecompressed =
+        RaiiStringCreateFromCString(g_pFullPathToBenchmarkTestFiles);
+    RaiiStringAppend_cString(&pathToSmallBasicTextFileDecompressed,
+                             "SmallBasicTextFile.decompressed.txt");
+
+    OpenFile(&pInFile, &pathToSmallBasicTextFile, "r");
+    OpenFile(&pOutCompressedFile, &pathToSmallBasicTextFileCompressed, "w+");
+    OpenFile(&pOutDecompressedFile, &pathToSmallBasicTextFileDecompressed,
+             "w+");
 
     const DEFLATE_RETURN_CODES statusDeflate =
         deflate_zlib.Deflate(pInFile, pOutCompressedFile, NULL);
