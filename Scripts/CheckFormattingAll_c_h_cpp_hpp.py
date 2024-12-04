@@ -2,6 +2,36 @@ import os
 from pathlib import Path
 import subprocess
 import glob
+import argparse
+
+
+parser = argparse.ArgumentParser(
+    description="Check and format all c, h, cpp, hpp files"
+)
+
+formatInPlaceOptions = ["true", "false"]
+
+parser.add_argument(
+    "--FormatInPlace",
+    action="store",
+    dest="formatInPlace",
+    choices=formatInPlaceOptions,
+    default="false",
+    help="Selects if the files should be formatted in place or if the formatting should be checked only",
+)
+
+# TODO: This method doesn't seem very safe due to the option to execute any executable that starts with 'clang-format'.
+#       Better argument checking should be implemented.
+parser.add_argument(
+    "--ClangFormatVersion",
+    action="store",
+    dest="clangFormatVersion",
+    default="",
+    help="Clang format version to use. The provided version is appended after the clang-format command with and must start with a '-'. For example: --ClangFormatVersion=-18",
+)
+
+args = parser.parse_args()
+
 
 CurrentScriptPath = Path(os.path.dirname(os.path.abspath(__file__)))
 RepositoryRootPath = Path(CurrentScriptPath.parent)
@@ -25,8 +55,18 @@ for file in FilesToFormat:
     print("\t{}".format(file))
 print()
 
-ClangFormatCommand = "clang-format --dry-run -Werror -style=file {}".format(
-    " ".join([str(file) for file in FilesToFormat])
+clangFormatFormattingOptions: str = ""
+if args.formatInPlace == "true":
+    clangFormatFormattingOptions = "-i"
+    print("Formatting files in place")
+else:
+    clangFormatFormattingOptions = "--dry-run -Werror"
+    print("Checking formatting only")
+
+ClangFormatCommand = "clang-format{0} {1} -style=file {2}".format(
+    args.clangFormatVersion,
+    clangFormatFormattingOptions,
+    " ".join([str(file) for file in FilesToFormat]),
 )
 subprocess.run(
     ClangFormatCommand,

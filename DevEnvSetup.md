@@ -1,7 +1,7 @@
 # Formatting
 
 ## Formatter
-Download `clang-format` as part of `LLVM`: https://releases.llvm.org/download.html. While installing LLVM make sure to check the box `Add LLVM to the system PATH for ...`.
+Download `clang-format` as part of `LLVM`: https://releases.llvm.org/download.html. While installing LLVM make sure to check the box `Add LLVM to the system PATH for ...`. Make sure to install at least version `16` to have `InsertNewlineAtEOF` available.
 
 > Note that you may have to close and re-open viusal studio to get the updated PATH.
 

@@ -27,7 +27,12 @@ jobs:
         with:
           python-version: '3.11'
       - run: |
-          python -u Scripts/CheckFormattingAll_c_h_cpp_hpp.py
+          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+          sudo add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main'
+          sudo add-apt-repository 'deb-src http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main'
+          sudo apt update
+          sudo apt install -y clang-format-18
+          python -u Scripts/CheckFormattingAll_c_h_cpp_hpp.py --ClangFormatVersion '-18'
 
 #========================================
 # Target Ubuntu - Host Ubuntu
@@ -58,9 +63,39 @@ jobs:
       target-platform: 'host'
 
 #========================================
+# Target Mac(x86_64) - Host Mac(x86_64)
+#========================================
+
+  target_macx8664_host_macx8664:
+    needs: check_formatting
+    permissions:
+      pull-requests: write
+    uses: ./.github/workflows/build-test-run-reusable-workflow.yaml
+    with:
+      runner: 'macos-13'
+      host-platform: 'mac(x86_64)'
+      target-platform: 'host'
+
+#========================================
+# Target Mac(ARM) - Host Mac(ARM)
+#========================================
+
+  target_macarm_host_macarm:
+    needs: check_formatting
+    permissions:
+      pull-requests: write
+    uses: ./.github/workflows/build-test-run-reusable-workflow.yaml
+    with:
+      runner: 'macos-14'
+      host-platform: 'mac(ARM)'
+      target-platform: 'host'
+
+
+#========================================
 # Target Zynq - Host Ubuntu
 #========================================
 
+# The cross-compiler can not be found in the Ubuntu runner, but it can be found when cross-compiling on a local Ubuntu desktop (VM)
   # build_target_zynq_host_ubuntu:
   #   needs: check_formatting
   #   permissions:
@@ -85,3 +120,35 @@ jobs:
       runner: 'windows-2022'
       host-platform: 'windows'
       target-platform: 'zynq'
+
+# TODO: For the below two jobs, appropriate cross-compilers for Mac (x86_64 and ARM) need to be added in ZyboEmbeddedLinux\CrossCompilers\aach32
+
+#========================================
+# Target Zynq - Host Mac(x86_64)
+#========================================
+
+# The cross-compiler is currently not compatible with Mac(x86_64) 
+  # target_zynq_host_macx8664:
+  #   needs: check_formatting
+  #   permissions:
+  #     pull-requests: write
+  #   uses: ./.github/workflows/build-test-run-reusable-workflow.yaml
+  #   with:
+  #     runner: 'macos-13'
+  #     host-platform: 'mac(x86_64)'
+  #     target-platform: 'zynq'
+
+#========================================
+# Target Zynq - Host Mac(ARM)
+#========================================
+
+# Expected to fail due to to cross-compiler not compiled for Mac(ARM)
+  # target_zynq_host_macarm:
+  #   needs: check_formatting
+  #   permissions:
+  #     pull-requests: write
+  #   uses: ./.github/workflows/build-test-run-reusable-workflow.yaml
+  #   with:
+  #     runner: 'macos-14'
+  #     host-platform: 'mac(ARM)'
+  #     target-platform: 'zynq'
