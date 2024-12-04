@@ -63,6 +63,35 @@ jobs:
       target-platform: 'host'
 
 #========================================
+# Target Mac(x86_64) - Host Mac(x86_64)
+#========================================
+
+  target_macx8664_host_macx8664:
+    needs: check_formatting
+    permissions:
+      pull-requests: write
+    uses: ./.github/workflows/build-test-run-reusable-workflow.yaml
+    with:
+      runner: 'macos-13'
+      host-platform: 'mac(x86_64)'
+      target-platform: 'host'
+
+#========================================
+# Target Mac(ARM) - Host Mac(ARM)
+#========================================
+
+  target_macarm_host_macarm:
+    needs: check_formatting
+    permissions:
+      pull-requests: write
+    uses: ./.github/workflows/build-test-run-reusable-workflow.yaml
+    with:
+      runner: 'macos-14'
+      host-platform: 'mac(ARM)'
+      target-platform: 'host'
+
+
+#========================================
 # Target Zynq - Host Ubuntu
 #========================================
 
