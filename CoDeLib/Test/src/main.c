@@ -9,8 +9,7 @@ static void RunAllTests(void) {
 }
 
 int main(int argc, const char **argv) {
-    RaiiString fullPathToBenchmarkTestFiles
-        __attribute__((cleanup(RaiiStringClean)));
+    RAII_STRING fullPathToBenchmarkTestFiles;
 
     // TODO: use getopt(...)
     if (argc == 1) {

@@ -112,7 +112,7 @@ def RunTests(
 
         TestExecutablePath.chmod(TestExecutablePath.stat().st_mode | stat.S_IEXEC)
 
-        TestOptions = '"' + str(BenchmarkTestFilesPath) + '/"'
+        TestOptions = '"' + str(BenchmarkTestFilesPath) + '/"' + " -v"
         TestCommand = str(TestExecutablePath) + " " + TestOptions
 
         RawTestResultsFileNames.append(GetTestResultsFileRawName(buildConfig, testName))
@@ -124,11 +124,17 @@ def RunTests(
             shell=True,
             check=False,
             stdout=TestResultsFileRaw,
+            stderr=subprocess.STDOUT,
         )
         PrependTestHeaderInRawResultsFile(testHeader, RawTestResultsFileNames[-1])
         TestResultsFileRaw.close()
 
         if result.returncode != 0:
+            print(testHeader)
+            print("Failed\n")
+            print("Called command:\n")
+            print(TestCommand)
+            print("\n")
             success = False
 
     return (success, RawTestResultsFileNames)

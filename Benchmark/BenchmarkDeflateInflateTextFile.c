@@ -14,10 +14,19 @@ B63_BENCHMARK(Deflate_zlib_SmallTextFile, n) {
     FILE *pOutCompressedFile = NULL;
 
     B63_SUSPEND {
-        OpenFile(&pInFile, g_pFullPathToBenchmarkTestFiles,
-                 "SmallBasicTextFile.txt", "r");
-        OpenFile(&pOutCompressedFile, g_pFullPathToBenchmarkTestFiles,
-                 "SmallBasicTextFile.compressed.txt", "w");
+        RAII_STRING pathToSmallBasicTextFile =
+            RaiiStringCreateFromCString(g_pFullPathToBenchmarkTestFiles);
+        RaiiStringAppend_cString(&pathToSmallBasicTextFile,
+                                 "SmallBasicTextFile.txt");
+
+        RAII_STRING pathToSmallBasicTextFileCompressedFile =
+            RaiiStringCreateFromCString(g_pFullPathToBenchmarkTestFiles);
+        RaiiStringAppend_cString(&pathToSmallBasicTextFileCompressedFile,
+                                 "SmallBasicTextFile.compressed.txt");
+
+        OpenFile(&pInFile, &pathToSmallBasicTextFile, "r");
+        OpenFile(&pOutCompressedFile, &pathToSmallBasicTextFileCompressedFile,
+                 "w");
     }
 
     const DEFLATE_RETURN_CODES statusDeflate =
@@ -40,10 +49,19 @@ B63_BENCHMARK(Inflate_zlib_SmallTextFile, n) {
     FILE *pOutDecompressedFile = NULL;
 
     B63_SUSPEND {
-        OpenFile(&pCompressedFile, g_pFullPathToBenchmarkTestFiles,
-                 "SmallBasicTextFileCompressed.txt", "r");
-        OpenFile(&pOutDecompressedFile, g_pFullPathToBenchmarkTestFiles,
-                 "SmallBasicTextFile.decompressed.txt", "w+");
+        RAII_STRING pathToSmallBasicTextFileCompressed =
+            RaiiStringCreateFromCString(g_pFullPathToBenchmarkTestFiles);
+        RaiiStringAppend_cString(&pathToSmallBasicTextFileCompressed,
+                                 "SmallBasicTextFileCompressed.txt");
+
+        RAII_STRING pathToSmallBasicTextFileDecompressedFile =
+            RaiiStringCreateFromCString(g_pFullPathToBenchmarkTestFiles);
+        RaiiStringAppend_cString(&pathToSmallBasicTextFileDecompressedFile,
+                                 "SmallBasicTextFile.decompressed.txt");
+
+        OpenFile(&pCompressedFile, &pathToSmallBasicTextFileCompressed, "r");
+        OpenFile(&pOutDecompressedFile,
+                 &pathToSmallBasicTextFileDecompressedFile, "w");
     }
 
     const INFLATE_RETURN_CODES statusInflate =
