@@ -33,6 +33,10 @@ RaiiString RaiiStringCreateFromCString(const char *pCString) {
 }
 
 void RaiiStringClean(RaiiString *pThis) {
+    if (pThis == NULL) {
+        return;
+    }
+
     if (pThis->pString != NULL) {
         free(pThis->pString);
         pThis->pString = NULL;
