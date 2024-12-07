@@ -104,6 +104,10 @@ TEST(
 // RaiiStringClean(...)
 //==============================
 
+TEST(TestRaiiString, test_RaiiStringClean_DoesNotCrashIfObjectIsNull) {
+    RaiiStringClean(NULL);
+}
+
 TEST(TestRaiiString, test_RaiiStringClean_SetsNullptrInObject) {
     raiiString = RaiiStringCreateFromCString("Hello, world!");
     RaiiStringClean(&raiiString);
@@ -296,6 +300,8 @@ TEST_GROUP_RUNNER(TestRaiiString) {
         test_RaiiStringCreateFromCString_SetsLengthOfZeroAndNullptrIfProvidedEmptyString);
 
     // RaiiStringClean()
+    RUN_TEST_CASE(TestRaiiString,
+                  test_RaiiStringClean_DoesNotCrashIfObjectIsNull);
     RUN_TEST_CASE(TestRaiiString, test_RaiiStringClean_SetsNullptrInObject);
     RUN_TEST_CASE(TestRaiiString, test_RaiiStringClean_SetsLengthZeroInObject);
 
