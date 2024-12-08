@@ -8,3 +8,5 @@ include(CMakeFindDependencyMacro)
 
 set(ZLIB_USE_STATIC_LIBS "ON")
 find_dependency(ZLIB REQUIRED)
+
+find_dependency(minizip REQUIRED)
