@@ -132,11 +132,11 @@ __attribute__((optnone))
 #endif
 TEST(TestRaiiString, test_RAII_STRING_MacroWorksInScope) {
     char **pointerToScopedRaiiStringString = NULL;
-    *pointerToScopedRaiiStringString = NULL;
     {
         RAII_STRING myString = RaiiStringCreateFromCString("Hello, world!");
         pointerToScopedRaiiStringString = &myString.pString;
 
+        TEST_ASSERT_NOT_NULL(pointerToScopedRaiiStringString);
         TEST_ASSERT_NOT_NULL(*pointerToScopedRaiiStringString);
         TEST_ASSERT_EQUAL_STRING("Hello, world!",
                                  *pointerToScopedRaiiStringString);
@@ -304,6 +304,9 @@ TEST_GROUP_RUNNER(TestRaiiString) {
                   test_RaiiStringClean_DoesNotCrashIfObjectIsNull);
     RUN_TEST_CASE(TestRaiiString, test_RaiiStringClean_SetsNullptrInObject);
     RUN_TEST_CASE(TestRaiiString, test_RaiiStringClean_SetsLengthZeroInObject);
+
+    // RAII_STRING
+    RUN_TEST_CASE(TestRaiiString, test_RAII_STRING_MacroWorksInScope);
 
     // RaiiStringAppend()
     RUN_TEST_CASE(
