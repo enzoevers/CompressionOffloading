@@ -1,11 +1,12 @@
 #include "unity_fixture.h"
 #include <CoDeLib/Deflate_zlib/Deflate_zlib.h>
+#include <CoDeLib/FileUtils/FileUtils.h>
 #include <CoDeLib/Inflate_zlib/Inflate_zlib.h>
 #include <CoDeLib/RaiiString/RaiiString.h>
-#include <CoDeLib/Test/Utility/FileUtils.h>
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
+
 
 static char *g_pFullPathToBenchmarkTestFiles = NULL;
 
