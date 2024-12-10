@@ -19,6 +19,15 @@
         "inflate_zlib.h": "c",
         "unity.h": "c",
         "raiistring.h": "c",
-        "fileutils.h": "c"
+        "fileutils.h": "c",
+        "stat.h": "c",
+        "windows.h": "c",
+        "cerrno": "c",
+        "string.h": "c",
+        "ctype.h": "c",
+        "stdbool.h": "c",
+        "unistd.h": "c",
+        "bitset": "c",
+        "ftw.h": "c"
     },
 }
