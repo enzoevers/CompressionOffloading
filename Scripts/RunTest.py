@@ -34,6 +34,10 @@ match args.targetPlatform:
 CurrentScriptPath = Path(os.path.dirname(os.path.abspath(__file__)))
 RepositoryRootPath = Path(CurrentScriptPath.parent)
 BenchmarkTestFilesPath = Path(RepositoryRootPath / "Benchmark" / "Files")
+CurrentWorkingDirectory = os.getcwd()
+
+# Add trailing slash to the path
+CurrentWorkingDirectory = CurrentWorkingDirectory + "/"
 
 os.chdir(RepositoryRootPath)
 
@@ -112,8 +116,18 @@ def RunTests(
 
         TestExecutablePath.chmod(TestExecutablePath.stat().st_mode | stat.S_IEXEC)
 
-        TestOptions = '"' + str(BenchmarkTestFilesPath) + '/"' + " -v"
+        TestOptions = (
+            '"'
+            + str(BenchmarkTestFilesPath)
+            + '/"'
+            + ' "'
+            + CurrentWorkingDirectory
+            + '" '
+            + "-v"
+        )
         TestCommand = str(TestExecutablePath) + " " + TestOptions
+
+        print("command: {}\n".format(TestCommand))
 
         RawTestResultsFileNames.append(GetTestResultsFileRawName(buildConfig, testName))
 

@@ -7,7 +7,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-
 char *g_pFullPathToBenchmarkTestFiles = NULL;
 
 B63_BENCHMARK(Deflate_zlib_SmallTextFile, n) {
@@ -25,9 +24,9 @@ B63_BENCHMARK(Deflate_zlib_SmallTextFile, n) {
         RaiiStringAppend_cString(&pathToSmallBasicTextFileCompressedFile,
                                  "SmallBasicTextFile.compressed.txt");
 
-        OpenFile(&pInFile, &pathToSmallBasicTextFile, "r");
-        OpenFile(&pOutCompressedFile, &pathToSmallBasicTextFileCompressedFile,
-                 "w");
+        OpenFileWithMode(&pInFile, &pathToSmallBasicTextFile, "r");
+        OpenFileWithMode(&pOutCompressedFile,
+                         &pathToSmallBasicTextFileCompressedFile, "w");
     }
 
     const DEFLATE_RETURN_CODES statusDeflate =
@@ -60,9 +59,10 @@ B63_BENCHMARK(Inflate_zlib_SmallTextFile, n) {
         RaiiStringAppend_cString(&pathToSmallBasicTextFileDecompressedFile,
                                  "SmallBasicTextFile.decompressed.txt");
 
-        OpenFile(&pCompressedFile, &pathToSmallBasicTextFileCompressed, "r");
-        OpenFile(&pOutDecompressedFile,
-                 &pathToSmallBasicTextFileDecompressedFile, "w");
+        OpenFileWithMode(&pCompressedFile, &pathToSmallBasicTextFileCompressed,
+                         "r");
+        OpenFileWithMode(&pOutDecompressedFile,
+                         &pathToSmallBasicTextFileDecompressedFile, "w");
     }
 
     const INFLATE_RETURN_CODES statusInflate =
