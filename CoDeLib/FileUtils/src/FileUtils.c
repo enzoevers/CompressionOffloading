@@ -1,9 +1,87 @@
 #include <CoDeLib/FileUtils/FileUtils.h>
 #include <assert.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
-void OpenFile(FILE **pInFile, RaiiString *pFullPath, char *pOpenMode) {
+#ifdef _WIN32
+#include <Windows.h>
+#include <ctype.h>
+#else
+#include <errno.h>
+#include <sys/stat.h>
+#endif
+
+// Based on
+// https://nachtimwald.com/2019/07/10/recursive-create-directory-in-c-revisited/
+bool RecursiveMkdir(const char *pDirname) {
+    if (pDirname == NULL) {
+        return false;
+    }
+
+    bool success = true;
+
+    const char separator = '/';
+
+    const size_t dirnameLength = strlen(pDirname);
+    const char *pDirnameRef = pDirname;
+
+    /* Skip Windows drive letter. */
+#ifdef _WIN32
+    if (dirnameLength < 3) {
+        return false;
+    }
+    pDirnameRef = strchr(pDirnameRef, ':');
+    if (pDirnameRef != NULL) {
+        pDirnameRef++;
+    }
+#endif
+
+    char *pDirnamePart = calloc(dirnameLength + 1, sizeof(char));
+    pDirnameRef = strchr(pDirnameRef, separator);
+    while (pDirnameRef != NULL) {
+        /* Skip empty elements. Could be a Windows UNC path or
+           just multiple separators which is okay. */
+        if (pDirnameRef != pDirname && *(pDirnameRef - 1) == separator) {
+            pDirnameRef++;
+            continue;
+        }
+        /* Put the path up to this point into a temporary to
+           pass to the make directory function. */
+        const size_t dirnamePartLength =
+            (pDirnameRef - pDirname) / sizeof(char);
+        memcpy(pDirnamePart, pDirname, dirnamePartLength);
+        // Adds null terminator after the seperator
+        pDirnamePart[dirnamePartLength] = '\0';
+
+#ifdef _WIN32
+        const int creationSuccess = CreateDirectory(pDirnamePart, NULL);
+        if (creationSuccess == FALSE) {
+            const DWORD lastError = GetLastError();
+            if (lastError != ERROR_ALREADY_EXISTS) {
+                success = false;
+                break;
+            }
+        }
+#else
+        const int creationSuccess = mkdir(pDirnamePart, 0774);
+        if (creationSuccess != 0) {
+            if (errno != EEXIST) {
+                printf("\npDirnamePart: %s\n", pDirnamePart);
+                printf("error: %s\n", strerror(errno));
+                success = false;
+                break;
+            }
+        }
+#endif
+        pDirnameRef++;
+        pDirnameRef = strchr(pDirnameRef, separator);
+    }
+    free(pDirnamePart);
+    return success;
+}
+
+void OpenFileWithMode(FILE **pInFile, RaiiString *pFullPath, char *pOpenMode) {
     *pInFile = fopen(pFullPath->pString, pOpenMode);
     if (*pInFile == NULL) {
         printf("Failed to open file: %s\n", pFullPath->pString);

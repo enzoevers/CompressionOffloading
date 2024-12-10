@@ -7,7 +7,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-
 static char *g_pFullPathToBenchmarkTestFiles = NULL;
 
 void SetupTestDeflateInflateZlib(char *pFullPathToBenchmarkTestFiles) {
@@ -44,10 +43,11 @@ TEST(TestDeflateInflateZlib, test_InflateZlibWorkWithDeflateZlib) {
     RaiiStringAppend_cString(&pathToSmallBasicTextFileDecompressed,
                              "SmallBasicTextFile.decompressed.txt");
 
-    OpenFile(&pInFile, &pathToSmallBasicTextFile, "r");
-    OpenFile(&pOutCompressedFile, &pathToSmallBasicTextFileCompressed, "w+");
-    OpenFile(&pOutDecompressedFile, &pathToSmallBasicTextFileDecompressed,
-             "w+");
+    OpenFileWithMode(&pInFile, &pathToSmallBasicTextFile, "r");
+    OpenFileWithMode(&pOutCompressedFile, &pathToSmallBasicTextFileCompressed,
+                     "w+");
+    OpenFileWithMode(&pOutDecompressedFile,
+                     &pathToSmallBasicTextFileDecompressed, "w+");
 
     const DEFLATE_RETURN_CODES statusDeflate =
         deflate_zlib.Deflate(pInFile, pOutCompressedFile, NULL);

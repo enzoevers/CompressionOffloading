@@ -1,7 +1,8 @@
 add_executable(CoDeLib_Test
     src/main.c
     src/TestRaiiString.c
-    src/TestDeflateInflateZlib.c)
+    src/TestDeflateInflateZlib.c
+    src/TestFileUtils.c)
 
 target_include_directories(CoDeLib_Test PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
