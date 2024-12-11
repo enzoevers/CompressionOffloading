@@ -24,11 +24,12 @@ install(FILES ${COMMON_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/CoDeLib)
 
 add_subdirectory(Deflate_zlib)
 add_subdirectory(Inflate_zlib)
+add_subdirectory(FileUtils)
 add_subdirectory(RaiiString)
 add_subdirectory(Test)
 
 install(
-    TARGETS CoDeLib Deflate_zlib Inflate_zlib RaiiString Utility
+    TARGETS CoDeLib Deflate_zlib Inflate_zlib RaiiString FileUtils
     EXPORT CoDeLibTargets
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

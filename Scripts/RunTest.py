@@ -115,6 +115,8 @@ def RunTests(
         TestOptions = '"' + str(BenchmarkTestFilesPath) + '/"' + " -v"
         TestCommand = str(TestExecutablePath) + " " + TestOptions
 
+        print("command: {}\n".format(TestCommand))
+
         RawTestResultsFileNames.append(GetTestResultsFileRawName(buildConfig, testName))
 
         TestResultsFileRaw = open(RawTestResultsFileNames[-1], "w")
