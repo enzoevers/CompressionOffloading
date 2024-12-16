@@ -1,8 +1,8 @@
 #include "unity_fixture.h"
 #include <CoDeLib/Deflate_zlib/Deflate_zlib.h>
+#include <CoDeLib/FileUtils/FileUtils.h>
 #include <CoDeLib/Inflate_zlib/Inflate_zlib.h>
 #include <CoDeLib/RaiiString/RaiiString.h>
-#include <CoDeLib/Test/Utility/FileUtils.h>
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -43,10 +43,11 @@ TEST(TestDeflateInflateZlib, test_InflateZlibWorkWithDeflateZlib) {
     RaiiStringAppend_cString(&pathToSmallBasicTextFileDecompressed,
                              "SmallBasicTextFile.decompressed.txt");
 
-    OpenFile(&pInFile, &pathToSmallBasicTextFile, "r");
-    OpenFile(&pOutCompressedFile, &pathToSmallBasicTextFileCompressed, "w+");
-    OpenFile(&pOutDecompressedFile, &pathToSmallBasicTextFileDecompressed,
-             "w+");
+    OpenFileWithMode(&pInFile, &pathToSmallBasicTextFile, "r");
+    OpenFileWithMode(&pOutCompressedFile, &pathToSmallBasicTextFileCompressed,
+                     "w+");
+    OpenFileWithMode(&pOutDecompressedFile,
+                     &pathToSmallBasicTextFileDecompressed, "w+");
 
     const DEFLATE_RETURN_CODES statusDeflate =
         deflate_zlib.Deflate(pInFile, pOutCompressedFile, NULL);

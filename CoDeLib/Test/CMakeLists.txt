@@ -1,7 +1,8 @@
 add_executable(CoDeLib_Test
     src/main.c
     src/TestRaiiString.c
-    src/TestDeflateInflateZlib.c)
+    src/TestDeflateInflateZlib.c
+    src/TestFileUtils.c)
 
 target_include_directories(CoDeLib_Test PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
@@ -10,6 +11,7 @@ target_include_directories(CoDeLib_Test PUBLIC
 target_link_libraries(CoDeLib_Test PRIVATE Deflate_zlib)
 target_link_libraries(CoDeLib_Test PRIVATE Inflate_zlib)
 target_link_libraries(CoDeLib_Test PRIVATE RaiiString)
+target_link_libraries(CoDeLib_Test PRIVATE FileUtils)
 
 FetchContent_Declare(
     Unity
@@ -22,6 +24,3 @@ FetchContent_Declare(
 set(UNITY_EXTENSION_FIXTURE ON CACHE INTERNAL "")
 FetchContent_MakeAvailable(Unity)
 target_link_libraries(CoDeLib_Test PRIVATE unity)
-
-add_subdirectory(Utility)
-target_link_libraries(CoDeLib_Test PUBLIC Utility)
