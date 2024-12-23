@@ -133,6 +133,17 @@ bool RecursiveRmdir(const char *const pDirname) {
         return false;
     }
 
+    const size_t dirnameLength =
+        strnlen(pDirname, MAX_PATH_LENGTH_WTH_TERMINATOR);
+    if (dirnameLength == 0 || dirnameLength >= MAX_PATH_LENGTH_WTH_TERMINATOR) {
+        return false;
+    }
+
+    const char lastChar = pDirname[dirnameLength - 1];
+    if (lastChar != '/' && lastChar != '\\') {
+        return false;
+    }
+
     const int maxOpenFiles = 64;
     const int flags = FTW_DEPTH | FTW_PHYS;
     int status = nftw(pDirname, _HandleFtwCallback_Remove, maxOpenFiles, flags);
