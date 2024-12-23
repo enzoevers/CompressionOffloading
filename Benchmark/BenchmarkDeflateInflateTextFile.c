@@ -1,8 +1,8 @@
 #include "b63/b63.h"
 #include <CoDeLib/Deflate_zlib/Deflate_zlib.h>
+#include <CoDeLib/FileUtils/FileUtils.h>
 #include <CoDeLib/Inflate_zlib/Inflate_zlib.h>
 #include <CoDeLib/RaiiString/RaiiString.h>
-#include <CoDeLib/Test/Utility/FileUtils.h>
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -24,9 +24,9 @@ B63_BENCHMARK(Deflate_zlib_SmallTextFile, n) {
         RaiiStringAppend_cString(&pathToSmallBasicTextFileCompressedFile,
                                  "SmallBasicTextFile.compressed.txt");
 
-        OpenFile(&pInFile, &pathToSmallBasicTextFile, "r");
-        OpenFile(&pOutCompressedFile, &pathToSmallBasicTextFileCompressedFile,
-                 "w");
+        OpenFileWithMode(&pInFile, &pathToSmallBasicTextFile, "r");
+        OpenFileWithMode(&pOutCompressedFile,
+                         &pathToSmallBasicTextFileCompressedFile, "w");
     }
 
     const DEFLATE_RETURN_CODES statusDeflate =
@@ -59,9 +59,10 @@ B63_BENCHMARK(Inflate_zlib_SmallTextFile, n) {
         RaiiStringAppend_cString(&pathToSmallBasicTextFileDecompressedFile,
                                  "SmallBasicTextFile.decompressed.txt");
 
-        OpenFile(&pCompressedFile, &pathToSmallBasicTextFileCompressed, "r");
-        OpenFile(&pOutDecompressedFile,
-                 &pathToSmallBasicTextFileDecompressedFile, "w");
+        OpenFileWithMode(&pCompressedFile, &pathToSmallBasicTextFileCompressed,
+                         "r");
+        OpenFileWithMode(&pOutDecompressedFile,
+                         &pathToSmallBasicTextFileDecompressedFile, "w");
     }
 
     const INFLATE_RETURN_CODES statusInflate =
