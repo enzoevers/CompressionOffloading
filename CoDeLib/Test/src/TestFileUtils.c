@@ -470,6 +470,49 @@ TEST(TestFileUtils, test_RecursiveRmdir_ReturnsFalseIfDirnameIsNull) {
     TEST_ASSERT_FALSE(success);
 }
 
+TEST(TestFileUtils, test_RecursiveRmdir_ReturnsFalseIfDirnameIsEmpty) {
+    bool success = RecursiveRmdir("");
+    TEST_ASSERT_FALSE(success);
+}
+
+TEST(TestFileUtils,
+     test_RecursiveRmdir_ReturnsFalseIfDirnameIsLargerThanMaxPath) {
+    char localBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR + 1];
+    memset(localBuffer, 'a', MAX_PATH_LENGTH_WTH_TERMINATOR);
+    localBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR] = '\0';
+
+    bool success = RecursiveRmdir(localBuffer);
+    TEST_ASSERT_FALSE(success);
+}
+
+TEST(
+    TestFileUtils,
+    test_RecursiveRmdir_ReturnsFalseIfRelativePathDoesNotEndInSlash_WindowsStyle) {
+    bool success = RecursiveRmdir(".\\NonExisting\\other");
+    TEST_ASSERT_FALSE(success);
+}
+
+TEST(
+    TestFileUtils,
+    test_RecursiveRmdir_ReturnsFalseIfRelativePathDoesNotEndInSlash_PosixStyle) {
+    bool success = RecursiveRmdir("./NonExisting/other");
+    TEST_ASSERT_FALSE(success);
+}
+
+TEST(
+    TestFileUtils,
+    test_RecursiveRmdir_ReturnsFalseIfAbsolutePathDoesNotEndInSlash_WindowsStyle) {
+    bool success = RecursiveRmdir("C:\\NonExisting\\other");
+    TEST_ASSERT_FALSE(success);
+}
+
+TEST(
+    TestFileUtils,
+    test_RecursiveRmdir_ReturnsFalseIfAbsolutePathDoesNotEndInSlash_PosixStyle) {
+    bool success = RecursiveRmdir("/NonExisting/other");
+    TEST_ASSERT_FALSE(success);
+}
+
 TEST(TestFileUtils, test_RecursiveRmdir_CanDeleteAbsolutePath) {
     RAII_STRING tmpPath =
         RaiiStringCreateFromCString(g_pFullPathToBenchmarkTestFiles);
@@ -723,6 +766,22 @@ TEST_GROUP_RUNNER(TestFileUtils) {
     // RecursiveRmdir(...)
     RUN_TEST_CASE(TestFileUtils,
                   test_RecursiveRmdir_ReturnsFalseIfDirnameIsNull);
+    RUN_TEST_CASE(TestFileUtils,
+                  test_RecursiveRmdir_ReturnsFalseIfDirnameIsEmpty);
+    RUN_TEST_CASE(TestFileUtils,
+                  test_RecursiveRmdir_ReturnsFalseIfDirnameIsLargerThanMaxPath);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_RecursiveRmdir_ReturnsFalseIfRelativePathDoesNotEndInSlash_WindowsStyle);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_RecursiveRmdir_ReturnsFalseIfRelativePathDoesNotEndInSlash_PosixStyle);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_RecursiveRmdir_ReturnsFalseIfAbsolutePathDoesNotEndInSlash_WindowsStyle);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_RecursiveRmdir_ReturnsFalseIfAbsolutePathDoesNotEndInSlash_PosixStyle);
     RUN_TEST_CASE(TestFileUtils, test_RecursiveRmdir_CanDeleteAbsolutePath);
     RUN_TEST_CASE(TestFileUtils,
                   test_RecursiveRmdir_CanDeleteRecursiveAbsolutePath);

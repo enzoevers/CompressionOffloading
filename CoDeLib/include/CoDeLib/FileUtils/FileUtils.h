@@ -18,7 +18,8 @@ bool RecursiveMkdir(const char *const pDirname);
 /*!
 @brief Recursively deletes a directory and all files. If the directory does not
 exist, nothing happens.
-@param pDirname The directory to delete. The directory needs to end in '/'.
+@param pDirname The directory to delete. The directory needs to end in '/' or
+'\\' ('\' escaped).
 @return true if the directory was deleted or did not exist, false otherwise.
 */
 bool RecursiveRmdir(const char *const pDirname);
