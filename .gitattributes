@@ -1,0 +1,15 @@
+# https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
+
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text=auto
+
+# Declare files that will always have CRLF line endings on checkout.
+Benchmark/Files/SmallBasicTextFileZip_store/SmallBasicTextFile.txt text eol=crlf
+
+# Exclude files from the forced CRLF line endings
+# Benchmark/Files/**/*.zip text
+# Benchmark/Files/**/ README.md text
+# Benchmark/Files/**/*.compressed.* text
+# Benchmark/Files/**/*.decompressed.* text
+# Benchmark/Files/**/*.zipped.* text
+# Benchmark/Files/**/*.unzipped.* text

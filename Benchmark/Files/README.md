@@ -1,0 +1,1 @@
+All these files are created on windows. Meaning that by default they end in `\r\n` rather than `\n`. This is important when testing that unzipped files are identical as the original.

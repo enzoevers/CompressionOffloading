@@ -55,6 +55,9 @@ def BuildBenchmark(
     ExternalZlibLibInstallPath = Path(
         ExternalLibPath / "zlib/Install" / targetPlatformString / BuildTypeString
     )
+    ExternalMinizipNgLibInstallPath = Path(
+        ExternalLibPath / "minizip-ng/Install" / targetPlatformString / BuildTypeString
+    )
 
     BenchmarkRootPath = Path(RepositoryRootPath / ProjectName)
     BuildDirectory = Path(
@@ -69,14 +72,15 @@ def BuildBenchmark(
     print("==============================")
     print(ProjectName + ": Configuring ({})".format(BuildTypeString))
     print("==============================")
-    configureCommand = 'cmake -G "{0}" -DCMAKE_TOOLCHAIN_FILE="{1}" -DCMAKE_PREFIX_PATH="{2}" -S {3} -B {4} -DZLIB_ROOT="{5}" -DCMAKE_BUILD_TYPE={6}'.format(
+    configureCommand = 'cmake -G "{0}" -DCMAKE_TOOLCHAIN_FILE="{1}" -S {2} -B {3} -DCMAKE_BUILD_TYPE={4} -DZLIB_ROOT="{5}" -DCMAKE_PREFIX_PATH="{6};{7}"'.format(
         buildEnv.GetCmakeGenerator(),
         buildEnv.GetCustomToolChainPath(),
-        CoDeLibInstallDirectory,
         BenchmarkRootPath,
         BuildDirectory,
-        ExternalZlibLibInstallPath,
         BuildTypeString,
+        ExternalZlibLibInstallPath,
+        CoDeLibInstallDirectory,
+        ExternalMinizipNgLibInstallPath,
     )
     subprocess.run(
         configureCommand,

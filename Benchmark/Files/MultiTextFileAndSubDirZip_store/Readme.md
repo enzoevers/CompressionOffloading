@@ -1,0 +1,1 @@
+The zip file has been created with 7zip and using deflate compression level `store` to not compress the files.

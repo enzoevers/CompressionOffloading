@@ -10,6 +10,8 @@ main.exe
 Benchmark*.txt*
 Benchmark/Files/*.compressed.*
 Benchmark/Files/*.decompressed.*
+Benchmark/Files/*.zipped.*
+Benchmark/Files/*.unzipped.*
 
 # Test generated files
 Test*.txt*
