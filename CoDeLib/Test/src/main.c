@@ -3,6 +3,7 @@
 #include "TestDeflateInflateZlib.h"
 #include "TestFileUtils.h"
 #include "TestUnZipMinizip.h"
+#include "TestUnZipMinizipInflateZlib.h"
 #include <CoDeLib/FileUtils/FileUtils.h>
 #include <CoDeLib/RaiiString/RaiiString.h>
 
@@ -11,6 +12,7 @@ static void RunAllTests(void) {
     RUN_TEST_GROUP(TestDeflateInflateZlib);
     RUN_TEST_GROUP(TestFileUtils);
     RUN_TEST_GROUP(TestUnZipMinizip);
+    RUN_TEST_GROUP(TestUnZipMinizipInflateZlib);
     RUN_TEST_GROUP(TestZipContentInfo);
 }
 
@@ -33,6 +35,7 @@ int main(int argc, const char **argv) {
     SetupTestFileUtils(fullPathToBenchmarkTestFiles.pString,
                        currentWorkingDirectory.pString);
     SetupTestUnZipMinizip(fullPathToBenchmarkTestFiles.pString);
+    SetupTestUnZipMinizipInflateZlib(fullPathToBenchmarkTestFiles.pString);
 
     return UnityMain(argc, argv, RunAllTests);
 }
