@@ -4,6 +4,7 @@ add_executable(CoDeLib_Test
     src/TestDeflateInflateZlib.c
     src/TestFileUtils.c
     src/TestUnZipMinizip.c
+    src/TestUnZipMinizipInflateZlib.c
     src/TestZipContentInfo.c
 )
 
