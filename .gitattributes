@@ -1,0 +1,18 @@
+# https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
+
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text=auto
+
+# Declare files that will always have CRLF line endings on checkout.
+# This is needed for the unit tests to pass when unzipping files.
+Benchmark/Files/SmallBasicTextFileZip/SmallBasicTextFile.txt text eol=crlf
+
+Benchmark/Files/MultiTextFileZip/TextFileOne.txt text eol=crlf
+Benchmark/Files/MultiTextFileZip/TextFileTwo.txt text eol=crlf
+Benchmark/Files/MultiTextFileZip/ThirdTextFile.txt text eol=crlf
+
+Benchmark/Files/MultiTextFileAndSubDirZip/DirFileOne/TextFileOne.txt text eol=crlf
+Benchmark/Files/MultiTextFileAndSubDirZip/TextFile.txt text eol=crlf
+Benchmark/Files/MultiTextFileAndSubDirZip/DirOfDirs/OtherDir/DummyFile.txt text eol=crlf
+Benchmark/Files/MultiTextFileAndSubDirZip/DirOfDirs/OtherDir/FilleInDirectory.txt text eol=crlf
+Benchmark/Files/MultiTextFileAndSubDirZip/DirOfDirs/SubDirWithCopyOfTopLevelFile/TextFile.txt text eol=crlf
