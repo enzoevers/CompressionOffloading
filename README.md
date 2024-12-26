@@ -23,10 +23,10 @@ Note that all development should keep the following targets in mind:
         - [x] DEFLATE -> compressed data file
         - [ ] DEFLATE -> ZIP file
         - [x] compressed data file -> INFLATE
-        - [ ] ZIP file -> INFLATE
+        - [x] ZIP file -> INFLATE
     - Multiple files
         - [ ] DEFLATE -> ZIP file
-        - [ ] file ZIP -> INFLATE
+        - [x] ZIP file -> INFLATE
     - For benchmarking see: https://github.com/okuvshynov/b63
 2. Write the DEFLATE algorithm in C.
     - [ ] See `1.`, but replace the DEFLATE implementation from zlib with my custom implementation
