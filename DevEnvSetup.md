@@ -54,3 +54,5 @@ $ python ./Scripts/BuildBenchmark.py --TargetPlatform zynq
 ```
 
 Additionally, you should be able to set breakpoints in the source code and run the code and debugger via the Visual Studio Code UI.
+
+To run all the tests on the zybo board run `./Test_Release ./Files/ $(pwd)/ true`

@@ -62,7 +62,7 @@ jobs:
           name: CoDeLibBuildArtifacts-target-${{ inputs.target-platform }}-host-${{ inputs.host-platform }}
           path: CoDeLib/Build
       - run: |
-          python -u Scripts/RunTest.py
+          python -u Scripts/RunTest.py --RunLongTests
       - name: 'Upload test results'
         uses: actions/upload-artifact@v4
         with:
