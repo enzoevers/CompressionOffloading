@@ -4,7 +4,9 @@ add_executable(CoDeLib_Test
     src/TestDeflateInflateZlib.c
     src/TestFileUtils.c
     src/TestUnZipMinizip.c
+    src/TestZipMinizip.c
     src/TestUnZipMinizipInflateZlib.c
+    src/TestZipMinizipUnZipMinizip.c
     src/TestZipContentInfo.c
 )
 
@@ -27,6 +29,7 @@ target_link_libraries(CoDeLib_Test PRIVATE Deflate_zlib)
 target_link_libraries(CoDeLib_Test PRIVATE Inflate_zlib)
 target_link_libraries(CoDeLib_Test PRIVATE FileUtils)
 target_link_libraries(CoDeLib_Test PRIVATE UnZip_minizip)
+target_link_libraries(CoDeLib_Test PRIVATE Zip_minizip)
 target_link_libraries(CoDeLib_Test PRIVATE RaiiString)
 target_link_libraries(CoDeLib_Test PRIVATE ZipContentInfo)
 

@@ -10,6 +10,7 @@ import argparse
 parser = argparse.ArgumentParser(description="Build and install external libraries")
 
 targetPlatformOptions = ["host", "zynq"]
+targetPlatformOptions = ["host", "zynq"]
 
 parser.add_argument(
     "--TargetPlatform",
@@ -18,6 +19,13 @@ parser.add_argument(
     choices=targetPlatformOptions,
     default="host",
     help="Target platform (default: %(default)s)",
+)
+
+parser.add_argument(
+    "--RunLongTests",
+    action="store_true",
+    dest="runLongTests",
+    help="Add this flag if long running unit tests should be run (default: not selected)",
 )
 
 args = parser.parse_args()
@@ -122,6 +130,9 @@ def RunTests(
             + '/"'
             + ' "'
             + CurrentWorkingDirectory
+            + '" '
+            + ' "'
+            + ("true" if args.runLongTests else "false")
             + '" '
             + "-v"
         )

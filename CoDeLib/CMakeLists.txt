@@ -25,6 +25,7 @@ set(COMMON_HEADERS
     ${CoDeLib_PUBLIC_INCLUDE_PATH}/IDeflate.h
     ${CoDeLib_PUBLIC_INCLUDE_PATH}/IInflate.h
     ${CoDeLib_PUBLIC_INCLUDE_PATH}/IUnZip.h
+    ${CoDeLib_PUBLIC_INCLUDE_PATH}/IZip.h
 )
 install(FILES ${COMMON_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/CoDeLib)
 
@@ -32,12 +33,13 @@ add_subdirectory(Deflate_zlib)
 add_subdirectory(Inflate_zlib)
 add_subdirectory(FileUtils)
 add_subdirectory(UnZip_minizip)
+add_subdirectory(Zip_minizip)
 add_subdirectory(RaiiString)
 add_subdirectory(ZipContentInfo)
 add_subdirectory(Test)
 
 install(
-    TARGETS CoDeLib Deflate_zlib Inflate_zlib UnZip_minizip RaiiString ZipContentInfo FileUtils
+    TARGETS CoDeLib Deflate_zlib Inflate_zlib UnZip_minizip Zip_minizip RaiiString ZipContentInfo FileUtils
     EXPORT CoDeLibTargets
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

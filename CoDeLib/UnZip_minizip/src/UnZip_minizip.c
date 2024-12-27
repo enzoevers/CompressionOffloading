@@ -103,9 +103,12 @@ UnZip(ZipContentInfo *const pZipInfo, const RaiiString *const pOutputDirPath) {
 
             int readCount = 0;
             do {
-                char buffer[256];
-                readCount =
-                    unzReadCurrentFile(uzfile, buffer, sizeof(buffer) - 1);
+                const uint32_t bufSize = 1024;
+                char buffer[bufSize];
+                readCount = unzReadCurrentFile(uzfile, buffer, bufSize - 1);
+
+                // It is safe to index with `readCount`. Because it
+                // will be at most `bufSize - 1`.
                 buffer[readCount] = '\0';
                 if (readCount < 0) {
                     status = UNZIP_ERROR;

@@ -13,11 +13,13 @@
 
 static char *g_pFullPathToBenchmarkTestFiles = NULL;
 static char *g_pCurrentWorkingDirectory = NULL;
+static bool g_runLongTests = false;
 
 void SetupTestFileUtils(char *pFullPathToBenchmarkTestFiles,
-                        char *pCurrentWorkingDirectory) {
+                        char *pCurrentWorkingDirectory, bool runLongTests) {
     g_pFullPathToBenchmarkTestFiles = pFullPathToBenchmarkTestFiles;
     g_pCurrentWorkingDirectory = pCurrentWorkingDirectory;
+    g_runLongTests = runLongTests;
 }
 
 TEST_GROUP(TestFileUtils);
@@ -955,7 +957,11 @@ TEST(TestFileUtils, test_GetFileSizeInBytes_ReturnsZeroIfPathIsNull) {
 
     // For some reason, when building for Zynq, there is a warning that fileSize
     // is not used when using `TEST_ASSERT_EQUAL_UINT64`
-    UNITY_TEST_ASSERT(0 == fileSize, __LINE__, "");
+    if (fileSize != 0) {
+        printf("Expected (sizeToCreate): %llu\n", (unsigned long long)0);
+        printf("Actual (fileSize): %llu\n", (unsigned long long)fileSize);
+        TEST_FAIL_MESSAGE("File size does not match expected size.");
+    }
 }
 
 TEST(TestFileUtils,
@@ -995,14 +1001,20 @@ TEST(TestFileUtils,
     const uint64_t fileSize = GetFileSizeInBytes(pFile);
     fclose(pFile);
 
-    UNITY_TEST_ASSERT(sizeToCreate == fileSize, __LINE__, "");
+    if (fileSize != sizeToCreate) {
+        printf("Expected (sizeToCreate): %llu\n",
+               (unsigned long long)sizeToCreate);
+        printf("Actual (fileSize): %llu\n", (unsigned long long)fileSize);
+        TEST_FAIL_MESSAGE("File size does not match expected size.");
+    }
 }
 
 TEST(TestFileUtils,
      test_GetFileSizeInBytes_ReturnsCorrectSizeOfFile_MediumFile) {
-#if !defined(NDEBUG)
-    TEST_IGNORE_MESSAGE("Not running in Debug mode");
-#endif
+
+    if (!g_runLongTests) {
+        TEST_IGNORE_MESSAGE("Not running because g_runLongTests is false");
+    }
 
     //----- Genereate 1GB file -----
 
@@ -1038,14 +1050,20 @@ TEST(TestFileUtils,
     const uint64_t fileSize = GetFileSizeInBytes(pFile);
     fclose(pFile);
 
-    UNITY_TEST_ASSERT(sizeToCreate == fileSize, __LINE__, "");
+    if (fileSize != sizeToCreate) {
+        printf("Expected (sizeToCreate): %llu\n",
+               (unsigned long long)sizeToCreate);
+        printf("Actual (fileSize): %llu\n", (unsigned long long)fileSize);
+        TEST_FAIL_MESSAGE("File size does not match expected size.");
+    }
 }
 
 TEST(TestFileUtils,
      test_GetFileSizeInBytes_ReturnsCorrectSizeOfFile_LargeFile) {
-#if !defined(NDEBUG)
-    TEST_IGNORE_MESSAGE("Not running in Debug mode");
-#endif
+
+    if (!g_runLongTests) {
+        TEST_IGNORE_MESSAGE("Not running because g_runLongTests is false");
+    }
 
     //----- Genereate 6GB file -----
 
@@ -1081,7 +1099,12 @@ TEST(TestFileUtils,
     const uint64_t fileSize = GetFileSizeInBytes(pFile);
     fclose(pFile);
 
-    UNITY_TEST_ASSERT(sizeToCreate == fileSize, __LINE__, "");
+    if (fileSize != sizeToCreate) {
+        printf("Expected (sizeToCreate): %llu\n",
+               (unsigned long long)sizeToCreate);
+        printf("Actual (fileSize): %llu\n", (unsigned long long)fileSize);
+        TEST_FAIL_MESSAGE("File size does not match expected size.");
+    }
 }
 
 TEST(TestFileUtils,
@@ -1135,7 +1158,12 @@ TEST(TestFileUtils,
     }
     fclose(pFile);
 
-    UNITY_TEST_ASSERT(sizeToCreate == fileSize, __LINE__, "");
+    if (fileSize != sizeToCreate) {
+        printf("Expected (sizeToCreate): %llu\n",
+               (unsigned long long)sizeToCreate);
+        printf("Actual (fileSize): %llu\n", (unsigned long long)fileSize);
+        TEST_FAIL_MESSAGE("File size does not match expected size.");
+    }
     TEST_ASSERT_EQUAL_UINT64(offset, currentPos);
 }
 
