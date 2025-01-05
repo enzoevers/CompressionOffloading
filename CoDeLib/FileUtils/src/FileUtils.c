@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -269,6 +270,75 @@ bool PathExists(const char *pPath) {
 #endif
 
     return pathExists;
+}
+
+size_t ExtractLastPartOfPath(const char *const pPath, char *const pDestBuffer,
+                             size_t destBufferSize) {
+    if (pPath == NULL || pDestBuffer == NULL || destBufferSize == 0) {
+        return SIZE_MAX;
+    }
+
+    const size_t pathLenght = strnlen(pPath, MAX_PATH_LENGTH_WTH_TERMINATOR);
+    if (pathLenght == 0 || pathLenght == MAX_PATH_LENGTH_WTH_TERMINATOR) {
+        return SIZE_MAX;
+    }
+
+    if (pathLenght == 1 && (pPath[0] == '/' || pPath[0] == '\\')) {
+        return SIZE_MAX;
+    }
+
+    char *pLocalPath = (char *)calloc(pathLenght + 1, sizeof(char));
+    memcpy(pLocalPath, pPath, pathLenght + 1);
+
+    const char lastChar = pLocalPath[pathLenght - 1];
+    bool isDir = lastChar == '/' || lastChar == '\\';
+
+    if (isDir) {
+        // Remove the last separator to make getting the file or directory name
+        // more generic.
+        pLocalPath[pathLenght - 1] = '\0';
+    }
+
+    char *pLastForwardSeparator = strrchr(pLocalPath, '/');
+    char *pLastBackwardSeparator = strrchr(pLocalPath, '\\');
+    char *pLastSeparator = pLastForwardSeparator > pLastBackwardSeparator
+                               ? pLastForwardSeparator
+                               : pLastBackwardSeparator;
+
+    size_t startIndexOfNameInPath = SIZE_MAX;
+    char *pLastPart = NULL;
+
+    if (pLastSeparator == NULL) {
+        // No separator found, so the last part is the whole path.
+        startIndexOfNameInPath = 0;
+        pLastPart = pLocalPath;
+    } else {
+        startIndexOfNameInPath = (pLastSeparator - pLocalPath) + 1;
+        pLastPart = pLastSeparator + 1;
+    }
+
+    if (isDir) {
+        // Add the last separator back if it was removed.
+        pLocalPath[pathLenght - 1] = lastChar;
+    }
+
+    const size_t lastPartLength =
+        strnlen(pLastPart, MAX_PATH_LENGTH_WTH_TERMINATOR);
+
+    if (lastPartLength == MAX_PATH_LENGTH_WTH_TERMINATOR) {
+        free(pLocalPath);
+        return SIZE_MAX;
+    }
+
+    if (lastPartLength >= destBufferSize) {
+        free(pLocalPath);
+        return SIZE_MAX;
+    }
+
+    memcpy(pDestBuffer, pLastPart, lastPartLength + 1);
+
+    free(pLocalPath);
+    return startIndexOfNameInPath;
 }
 
 void OpenFileWithMode(FILE **pInFile, RaiiString *pFullPath, char *pOpenMode) {

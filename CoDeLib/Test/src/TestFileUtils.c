@@ -650,6 +650,275 @@ TEST(TestFileUtils,
 }
 
 //==============================
+// ExtractLastPartOfPath(...)
+//==============================
+
+TEST(TestFileUtils, test_ExtractLastPartOfPath_ReturnsInvalidIfPathIsNull) {
+    const char *pPath = NULL;
+    char lastPartBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
+    size_t indexInPath = ExtractLastPartOfPath(pPath, &lastPartBuffer[0],
+                                               MAX_PATH_LENGTH_WTH_TERMINATOR);
+
+    TEST_ASSERT_EQUAL_size_t(SIZE_MAX, indexInPath);
+}
+
+TEST(TestFileUtils, test_ExtractLastPartOfPath_ReturnsInvalidIfPathIsEmpty) {
+    const char *pPath = "";
+    char lastPartBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
+    size_t indexInPath = ExtractLastPartOfPath(pPath, &lastPartBuffer[0],
+                                               MAX_PATH_LENGTH_WTH_TERMINATOR);
+
+    TEST_ASSERT_EQUAL_size_t(SIZE_MAX, indexInPath);
+}
+
+TEST(TestFileUtils,
+     test_ExtractLastPartOfPath_ReturnsInvalidIfPathIsLargerThanMax) {
+    char path[MAX_PATH_LENGTH_WTH_TERMINATOR + 1];
+    memset(path, 'a', MAX_PATH_LENGTH_WTH_TERMINATOR);
+    path[MAX_PATH_LENGTH_WTH_TERMINATOR] = '\0';
+
+    char lastPartBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
+    size_t indexInPath = ExtractLastPartOfPath(path, &lastPartBuffer[0],
+                                               MAX_PATH_LENGTH_WTH_TERMINATOR);
+
+    TEST_ASSERT_EQUAL_size_t(SIZE_MAX, indexInPath);
+}
+
+TEST(TestFileUtils,
+     test_ExtractLastPartOfPath_DoesNotReturnInvalidIfPathIsMaxSize) {
+    char path[MAX_PATH_LENGTH_WTH_TERMINATOR];
+    memset(path, 'a', MAX_PATH_LENGTH);
+    path[MAX_PATH_LENGTH - 1] = '/';
+    path[MAX_PATH_LENGTH] = '\0';
+
+    char lastPartBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
+    size_t indexInPath = ExtractLastPartOfPath(path, &lastPartBuffer[0],
+                                               MAX_PATH_LENGTH_WTH_TERMINATOR);
+
+    TEST_ASSERT_NOT_EQUAL_size_t(SIZE_MAX, indexInPath);
+    TEST_ASSERT_EQUAL_STRING(path, lastPartBuffer);
+}
+
+TEST(TestFileUtils, test_ExtractLastPartOfPath_ReturnsInvalidIfBufferIsNull) {
+    const char *pPath = "./tmp/somefile.txt";
+    char *pLastPartBuffer = NULL;
+    size_t indexInPath = ExtractLastPartOfPath(pPath, pLastPartBuffer,
+                                               MAX_PATH_LENGTH_WTH_TERMINATOR);
+
+    TEST_ASSERT_EQUAL_size_t(SIZE_MAX, indexInPath);
+}
+
+TEST(TestFileUtils,
+     test_ExtractLastPartOfPath_ReturnsInvalidIfBufferSizeIsZero) {
+    const char *pPath = "./tmp/somefile.txt";
+    char lastPartBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
+    size_t indexInPath = ExtractLastPartOfPath(pPath, &lastPartBuffer[0], 0);
+
+    TEST_ASSERT_EQUAL_size_t(SIZE_MAX, indexInPath);
+}
+
+TEST(
+    TestFileUtils,
+    test_ExtractLastPartOfPath_ReturnsInvalidIfPathIsOnlySeparator_PosixStyle) {
+    const char *pPath = "/";
+    char lastPartBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
+    size_t indexInPath = ExtractLastPartOfPath(pPath, &lastPartBuffer[0],
+                                               MAX_PATH_LENGTH_WTH_TERMINATOR);
+
+    TEST_ASSERT_EQUAL_size_t(SIZE_MAX, indexInPath);
+}
+
+TEST(
+    TestFileUtils,
+    test_ExtractLastPartOfPath_ReturnsInvalidIfPathIsOnlySeparator_WindowsStyle) {
+    const char *pPath = "\\";
+    char lastPartBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
+    size_t indexInPath = ExtractLastPartOfPath(pPath, &lastPartBuffer[0],
+                                               MAX_PATH_LENGTH_WTH_TERMINATOR);
+
+    TEST_ASSERT_EQUAL_size_t(SIZE_MAX, indexInPath);
+}
+
+TEST(TestFileUtils,
+     test_ExtractLastPartOfPath_ReturnsInvalidIfBufferSizeIsTooSmall_File) {
+    const char *pPath = "./tmp/somefile.txt";
+
+    // "somefile.txt" is 12 characters long,  plus null terminator = 13
+    // So buffer size of 12 is too small.
+    const size_t bufferSize = 12;
+    char lastPartBuffer[bufferSize];
+    size_t indexInPath =
+        ExtractLastPartOfPath(pPath, &lastPartBuffer[0], bufferSize);
+
+    TEST_ASSERT_EQUAL_size_t(SIZE_MAX, indexInPath);
+}
+
+TEST(
+    TestFileUtils,
+    test_ExtractLastPartOfPath_ReturnsInvalidIfBufferSizeIsTooSmall_Directory) {
+    const char *pPath = "./tmp/someDir/";
+
+    // "someDir/" is 8 characters long,  plus null terminator = 9
+    // So buffer size of 8 is too small.
+    const size_t bufferSize = 8;
+    char lastPartBuffer[bufferSize];
+    size_t indexInPath =
+        ExtractLastPartOfPath(pPath, &lastPartBuffer[0], bufferSize);
+
+    TEST_ASSERT_EQUAL_size_t(SIZE_MAX, indexInPath);
+}
+
+TEST(
+    TestFileUtils,
+    test_ExtractLastPartOfPath_ReturnsCorrectLastPartStringAndIndexIfBufferIsExcactSize_File) {
+    const char *pPath = "./tmp/somefile.txt";
+
+    // "somefile.txt" is 12 characters long,  plus null terminator = 13
+    const size_t bufferSize = 13;
+    char lastPartBuffer[bufferSize];
+    size_t indexInPath =
+        ExtractLastPartOfPath(pPath, &lastPartBuffer[0], bufferSize);
+
+    TEST_ASSERT_EQUAL_size_t(6, indexInPath);
+    TEST_ASSERT_EQUAL_STRING("somefile.txt", lastPartBuffer);
+}
+
+TEST(
+    TestFileUtils,
+    test_ExtractLastPartOfPath_ReturnsCorrectLastPartStringAndIndexIfBufferIsExcactSize_Directory) {
+    const char *pPath = "./tmp/someDir/";
+
+    // "someDir/" is 8 characters long,  plus null terminator = 9
+    const size_t bufferSize = 9;
+    char lastPartBuffer[bufferSize];
+    size_t indexInPath =
+        ExtractLastPartOfPath(pPath, &lastPartBuffer[0], bufferSize);
+
+    TEST_ASSERT_EQUAL_size_t(6, indexInPath);
+    TEST_ASSERT_EQUAL_STRING("someDir/", lastPartBuffer);
+}
+
+TEST(
+    TestFileUtils,
+    test_ExtractLastPartOfPath_ReturnsCorrectLastPartStringAndIndex_File_PosixStyle) {
+    const char *pPath = "./tmp/somefile.txt";
+    char lastPartBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
+    size_t indexInPath = ExtractLastPartOfPath(pPath, &lastPartBuffer[0],
+                                               MAX_PATH_LENGTH_WTH_TERMINATOR);
+
+    TEST_ASSERT_EQUAL_size_t(6, indexInPath);
+    TEST_ASSERT_EQUAL_STRING("somefile.txt", lastPartBuffer);
+}
+
+TEST(
+    TestFileUtils,
+    test_ExtractLastPartOfPath_ReturnsCorrectLastPartStringAndIndex_Directory_PosixStyle) {
+    const char *pPath = "./tmp/someDir/";
+    char lastPartBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
+    size_t indexInPath = ExtractLastPartOfPath(pPath, &lastPartBuffer[0],
+                                               MAX_PATH_LENGTH_WTH_TERMINATOR);
+
+    TEST_ASSERT_EQUAL_size_t(6, indexInPath);
+    TEST_ASSERT_EQUAL_STRING("someDir/", lastPartBuffer);
+}
+
+TEST(
+    TestFileUtils,
+    test_ExtractLastPartOfPath_ReturnsCorrectLastPartStringAndIndex_File_WindowsStyle) {
+    const char *pPath = ".\\tmp\\somefile.txt";
+    char lastPartBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
+    size_t indexInPath = ExtractLastPartOfPath(pPath, &lastPartBuffer[0],
+                                               MAX_PATH_LENGTH_WTH_TERMINATOR);
+
+    TEST_ASSERT_EQUAL_size_t(6, indexInPath);
+    TEST_ASSERT_EQUAL_STRING("somefile.txt", lastPartBuffer);
+}
+
+TEST(
+    TestFileUtils,
+    test_ExtractLastPartOfPath_ReturnsCorrectLastPartStringAndIndex_Directory_WindowsStyle) {
+    const char *pPath = ".\\tmp\\someDir\\";
+    char lastPartBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
+    size_t indexInPath = ExtractLastPartOfPath(pPath, &lastPartBuffer[0],
+                                               MAX_PATH_LENGTH_WTH_TERMINATOR);
+
+    TEST_ASSERT_EQUAL_size_t(6, indexInPath);
+    TEST_ASSERT_EQUAL_STRING("someDir\\", lastPartBuffer);
+}
+
+TEST(
+    TestFileUtils,
+    test_ExtractLastPartOfPath_ReturnsCorrectLastPartStringAndIndex_File_MixedStyle_PosixLast) {
+    const char *pPath = ".\\tmp/somefile.txt";
+    char lastPartBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
+    size_t indexInPath = ExtractLastPartOfPath(pPath, &lastPartBuffer[0],
+                                               MAX_PATH_LENGTH_WTH_TERMINATOR);
+
+    TEST_ASSERT_EQUAL_size_t(6, indexInPath);
+    TEST_ASSERT_EQUAL_STRING("somefile.txt", lastPartBuffer);
+}
+
+TEST(
+    TestFileUtils,
+    test_ExtractLastPartOfPath_ReturnsCorrectLastPartStringAndIndex_Directory_MixedStyle_PosixLast) {
+    const char *pPath = ".\\tmp\\someDir/";
+    char lastPartBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
+    size_t indexInPath = ExtractLastPartOfPath(pPath, &lastPartBuffer[0],
+                                               MAX_PATH_LENGTH_WTH_TERMINATOR);
+
+    TEST_ASSERT_EQUAL_size_t(6, indexInPath);
+    TEST_ASSERT_EQUAL_STRING("someDir/", lastPartBuffer);
+}
+
+TEST(
+    TestFileUtils,
+    test_ExtractLastPartOfPath_ReturnsCorrectLastPartStringAndIndex_File_MixedStyle_WindowsLast) {
+    const char *pPath = "./tmp\\somefile.txt";
+    char lastPartBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
+    size_t indexInPath = ExtractLastPartOfPath(pPath, &lastPartBuffer[0],
+                                               MAX_PATH_LENGTH_WTH_TERMINATOR);
+
+    TEST_ASSERT_EQUAL_size_t(6, indexInPath);
+    TEST_ASSERT_EQUAL_STRING("somefile.txt", lastPartBuffer);
+}
+
+TEST(
+    TestFileUtils,
+    test_ExtractLastPartOfPath_ReturnsCorrectLastPartStringAndIndex_Directory_MixedStyle_WindowsLast) {
+    const char *pPath = "./tmp/someDir\\";
+    char lastPartBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
+    size_t indexInPath = ExtractLastPartOfPath(pPath, &lastPartBuffer[0],
+                                               MAX_PATH_LENGTH_WTH_TERMINATOR);
+
+    TEST_ASSERT_EQUAL_size_t(6, indexInPath);
+    TEST_ASSERT_EQUAL_STRING("someDir\\", lastPartBuffer);
+}
+
+TEST(
+    TestFileUtils,
+    test_ExtractLastPartOfPath_ReturnsCorrectStringAndIndexWhenNoBasePath_File) {
+    const char *pPath = "somefile.txt";
+    char lastPartBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
+    size_t indexInPath = ExtractLastPartOfPath(pPath, &lastPartBuffer[0],
+                                               MAX_PATH_LENGTH_WTH_TERMINATOR);
+
+    TEST_ASSERT_EQUAL_size_t(0, indexInPath);
+    TEST_ASSERT_EQUAL_STRING("somefile.txt", lastPartBuffer);
+}
+
+TEST(
+    TestFileUtils,
+    test_ExtractLastPartOfPath_ReturnsCorrectStringAndIndexWhenNoBasePath_Directory) {
+    const char *pPath = "someDir/";
+    char lastPartBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
+    size_t indexInPath = ExtractLastPartOfPath(pPath, &lastPartBuffer[0],
+                                               MAX_PATH_LENGTH_WTH_TERMINATOR);
+
+    TEST_ASSERT_EQUAL_size_t(0, indexInPath);
+    TEST_ASSERT_EQUAL_STRING("someDir/", lastPartBuffer);
+}
+
+//==============================
 // TEST_GROUP_RUNNER
 //==============================
 
@@ -795,4 +1064,68 @@ TEST_GROUP_RUNNER(TestFileUtils) {
         test_RecursiveRmdir_CanDeleteRecursiveRelativePathWithMultipleDirectories);
     RUN_TEST_CASE(TestFileUtils,
                   test_RecursiveRmdir_CanDeleteRecursiveRelativePathWithFile);
+
+    // ExtractLastPartOfPath(...)
+    RUN_TEST_CASE(TestFileUtils,
+                  test_ExtractLastPartOfPath_ReturnsInvalidIfPathIsNull);
+    RUN_TEST_CASE(TestFileUtils,
+                  test_ExtractLastPartOfPath_ReturnsInvalidIfPathIsEmpty);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_ExtractLastPartOfPath_ReturnsInvalidIfPathIsLargerThanMax);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_ExtractLastPartOfPath_DoesNotReturnInvalidIfPathIsMaxSize);
+    RUN_TEST_CASE(TestFileUtils,
+                  test_ExtractLastPartOfPath_ReturnsInvalidIfBufferIsNull);
+    RUN_TEST_CASE(TestFileUtils,
+                  test_ExtractLastPartOfPath_ReturnsInvalidIfBufferSizeIsZero);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_ExtractLastPartOfPath_ReturnsInvalidIfPathIsOnlySeparator_PosixStyle);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_ExtractLastPartOfPath_ReturnsInvalidIfPathIsOnlySeparator_WindowsStyle);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_ExtractLastPartOfPath_ReturnsInvalidIfBufferSizeIsTooSmall_File);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_ExtractLastPartOfPath_ReturnsInvalidIfBufferSizeIsTooSmall_Directory);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_ExtractLastPartOfPath_ReturnsCorrectLastPartStringAndIndexIfBufferIsExcactSize_File);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_ExtractLastPartOfPath_ReturnsCorrectLastPartStringAndIndexIfBufferIsExcactSize_Directory);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_ExtractLastPartOfPath_ReturnsCorrectLastPartStringAndIndex_File_PosixStyle);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_ExtractLastPartOfPath_ReturnsCorrectLastPartStringAndIndex_Directory_PosixStyle);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_ExtractLastPartOfPath_ReturnsCorrectLastPartStringAndIndex_File_WindowsStyle);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_ExtractLastPartOfPath_ReturnsCorrectLastPartStringAndIndex_Directory_WindowsStyle);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_ExtractLastPartOfPath_ReturnsCorrectLastPartStringAndIndex_File_MixedStyle_PosixLast);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_ExtractLastPartOfPath_ReturnsCorrectLastPartStringAndIndex_Directory_MixedStyle_PosixLast);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_ExtractLastPartOfPath_ReturnsCorrectLastPartStringAndIndex_File_MixedStyle_WindowsLast);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_ExtractLastPartOfPath_ReturnsCorrectLastPartStringAndIndex_Directory_MixedStyle_WindowsLast);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_ExtractLastPartOfPath_ReturnsCorrectStringAndIndexWhenNoBasePath_File);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_ExtractLastPartOfPath_ReturnsCorrectStringAndIndexWhenNoBasePath_Directory);
 }
