@@ -13,7 +13,7 @@ As for now, first the [DEFLATE](https://en.wikipedia.org/wiki/Deflate) algorithm
 See [DevEnvSetup.md](./DevEnvSetup.md).
 
 Note that all development should keep the following targets in mind:
-- x86 Linux | Windows | MacOS
+- x64 Linux | Windows | MacOS
 - ARM MacOS
 - ARM Zynq
 
@@ -39,7 +39,7 @@ Note that all development should keep the following targets in mind:
 7. Implement an FPGA-friendly version of INFLATE in VHDL
     - [ ] See `1.`, but replace the DEFLATE implementation from zlib with my custom FPGA-offloading implementation
 
-Now compression and decompression works. Something that I was thinking about as well was that a stream of incoming data in the FPGA could be compressed on the FPGA and, as a stream, send compressed chucks to the PS. This way it may be possible to store data (logging) data more efficiently without needing a lot of RAM.
+Now compression and decompression work. Something that I was thinking about as well was that a stream of incoming data in the FPGA could be compressed on the FPGA and, as a stream, send compressed chucks to the PS. This way it may be possible to store data (logging) data more efficiently without needing a lot of RAM.
 
 ## References and useful links
 ### (De)comporession algorithm
