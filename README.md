@@ -13,8 +13,8 @@ As for now, first the [DEFLATE](https://en.wikipedia.org/wiki/Deflate) algorithm
 See [DevEnvSetup.md](./DevEnvSetup.md).
 
 Note that all development should keep the following targets in mind:
-- x86 Linux
-- x86 Windows
+- x86 Linux | Windows | MacOS
+- ARM MacOS
 - ARM Zynq
 
 ## Plan
