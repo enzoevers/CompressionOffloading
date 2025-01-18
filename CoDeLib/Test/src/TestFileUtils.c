@@ -918,6 +918,28 @@ TEST(
     TEST_ASSERT_EQUAL_STRING("someDir/", lastPartBuffer);
 }
 
+TEST(TestFileUtils,
+     test_ExtractLastPartOfPath_IgnoresEmptyEntriesInPath_ForwardSlashes) {
+    const char *pPath = "./tmp/someDir///";
+    char lastPartBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
+    size_t indexInPath = ExtractLastPartOfPath(pPath, &lastPartBuffer[0],
+                                               MAX_PATH_LENGTH_WTH_TERMINATOR);
+
+    TEST_ASSERT_EQUAL_size_t(6, indexInPath);
+    TEST_ASSERT_EQUAL_STRING("someDir/", lastPartBuffer);
+}
+
+TEST(TestFileUtils,
+     test_ExtractLastPartOfPath_IgnoresEmptyEntriesInPath_BackwardSlashes) {
+    const char *pPath = ".\\tmp\\someDir\\\\\\";
+    char lastPartBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
+    size_t indexInPath = ExtractLastPartOfPath(pPath, &lastPartBuffer[0],
+                                               MAX_PATH_LENGTH_WTH_TERMINATOR);
+
+    TEST_ASSERT_EQUAL_size_t(6, indexInPath);
+    TEST_ASSERT_EQUAL_STRING("someDir\\", lastPartBuffer);
+}
+
 //==============================
 // TEST_GROUP_RUNNER
 //==============================
@@ -1128,4 +1150,10 @@ TEST_GROUP_RUNNER(TestFileUtils) {
     RUN_TEST_CASE(
         TestFileUtils,
         test_ExtractLastPartOfPath_ReturnsCorrectStringAndIndexWhenNoBasePath_Directory);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_ExtractLastPartOfPath_IgnoresEmptyEntriesInPath_ForwardSlashes);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_ExtractLastPartOfPath_IgnoresEmptyEntriesInPath_BackwardSlashes);
 }
