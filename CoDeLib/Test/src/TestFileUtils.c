@@ -22,10 +22,16 @@ void SetupTestFileUtils(char *pFullPathToBenchmarkTestFiles,
 
 TEST_GROUP(TestFileUtils);
 
-TEST_SETUP(TestFileUtils) {}
+TEST_SETUP(TestFileUtils) {
+    if (PathExists("./tmp/")) {
+        TEST_ASSERT_TRUE(RecursiveRmdir("./tmp/"));
+    }
+}
 
 TEST_TEAR_DOWN(TestFileUtils) {
-    // TODO: Remove all created directories during tests
+    if (PathExists("./tmp/")) {
+        TEST_ASSERT_TRUE(RecursiveRmdir("./tmp/"));
+    }
 }
 
 //==============================
@@ -941,6 +947,199 @@ TEST(TestFileUtils,
 }
 
 //==============================
+// GetFileSizeInBytes(...)
+//==============================
+
+TEST(TestFileUtils, test_GetFileSizeInBytes_ReturnsZeroIfPathIsNull) {
+    const uint64_t fileSize = GetFileSizeInBytes(NULL);
+
+    // For some reason, when building for Zynq, there is a warning that fileSize
+    // is not used when using `TEST_ASSERT_EQUAL_UINT64`
+    UNITY_TEST_ASSERT(0 == fileSize, __LINE__, "");
+}
+
+TEST(TestFileUtils,
+     test_GetFileSizeInBytes_ReturnsCorrectSizeOfFile_SmallFile) {
+
+    //----- Genereate 100KB file -----
+
+    const char *const pRelativePathToTmp = "./tmp/";
+    const char *const pFileName = "dummy.txt";
+    RAII_STRING generatedFilePath =
+        RaiiStringCreateFromCString(pRelativePathToTmp);
+    RaiiStringAppend_cString(&generatedFilePath, pFileName);
+
+    RecursiveMkdir(pRelativePathToTmp);
+
+    FILE *pFileGenerate = NULL;
+    OpenFileWithMode(&pFileGenerate, &generatedFilePath, "wb");
+
+    const uint64_t sizeToCreate = 100000;
+    const uint64_t bufSize = 5000;
+
+    char buf[bufSize];
+    memset(buf, 'a', bufSize - 1);
+    buf[bufSize - 1] = '\0';
+
+    for (uint64_t i = 0; i < sizeToCreate; i += bufSize) {
+        fwrite(buf, 1, bufSize, pFileGenerate);
+    }
+
+    fclose(pFileGenerate);
+
+    //----- Test -----
+
+    FILE *pFile = NULL;
+    OpenFileWithMode(&pFile, &generatedFilePath, "rb");
+
+    const uint64_t fileSize = GetFileSizeInBytes(pFile);
+    fclose(pFile);
+
+    UNITY_TEST_ASSERT(sizeToCreate == fileSize, __LINE__, "");
+}
+
+TEST(TestFileUtils,
+     test_GetFileSizeInBytes_ReturnsCorrectSizeOfFile_MediumFile) {
+#if !defined(NDEBUG)
+    TEST_IGNORE_MESSAGE("Not running in Debug mode");
+#endif
+
+    //----- Genereate 1GB file -----
+
+    const char *const pRelativePathToTmp = "./tmp/";
+    const char *const pFileName = "dummy.txt";
+    RAII_STRING generatedFilePath =
+        RaiiStringCreateFromCString(pRelativePathToTmp);
+    RaiiStringAppend_cString(&generatedFilePath, pFileName);
+
+    RecursiveMkdir(pRelativePathToTmp);
+
+    FILE *pFileGenerate = NULL;
+    OpenFileWithMode(&pFileGenerate, &generatedFilePath, "wb");
+
+    const uint64_t sizeToCreate = 1000000000;
+    const uint64_t bufSize = 5000;
+
+    char buf[bufSize];
+    memset(buf, 'a', bufSize - 1);
+    buf[bufSize - 1] = '\0';
+
+    for (uint64_t i = 0; i < sizeToCreate; i += bufSize) {
+        fwrite(buf, 1, bufSize, pFileGenerate);
+    }
+
+    fclose(pFileGenerate);
+
+    //----- Test -----
+
+    FILE *pFile = NULL;
+    OpenFileWithMode(&pFile, &generatedFilePath, "rb");
+
+    const uint64_t fileSize = GetFileSizeInBytes(pFile);
+    fclose(pFile);
+
+    UNITY_TEST_ASSERT(sizeToCreate == fileSize, __LINE__, "");
+}
+
+TEST(TestFileUtils,
+     test_GetFileSizeInBytes_ReturnsCorrectSizeOfFile_LargeFile) {
+#if !defined(NDEBUG)
+    TEST_IGNORE_MESSAGE("Not running in Debug mode");
+#endif
+
+    //----- Genereate 6GB file -----
+
+    const char *const pRelativePathToTmp = "./tmp/";
+    const char *const pFileName = "dummy.txt";
+    RAII_STRING generatedFilePath =
+        RaiiStringCreateFromCString(pRelativePathToTmp);
+    RaiiStringAppend_cString(&generatedFilePath, pFileName);
+
+    RecursiveMkdir(pRelativePathToTmp);
+
+    FILE *pFileGenerate = NULL;
+    OpenFileWithMode(&pFileGenerate, &generatedFilePath, "wb");
+
+    const uint64_t sizeToCreate = 6000000000;
+    const uint64_t bufSize = 5000;
+
+    char buf[bufSize];
+    memset(buf, 'a', bufSize - 1);
+    buf[bufSize - 1] = '\0';
+
+    for (uint64_t i = 0; i < sizeToCreate; i += bufSize) {
+        fwrite(buf, 1, bufSize, pFileGenerate);
+    }
+
+    fclose(pFileGenerate);
+
+    //----- Test -----
+
+    FILE *pFile = NULL;
+    OpenFileWithMode(&pFile, &generatedFilePath, "rb");
+
+    const uint64_t fileSize = GetFileSizeInBytes(pFile);
+    fclose(pFile);
+
+    UNITY_TEST_ASSERT(sizeToCreate == fileSize, __LINE__, "");
+}
+
+TEST(TestFileUtils,
+     test_GetFileSizeInBytes_DoesNotChangeCurrentPositionInFile) {
+
+    //----- Genereate 100KB file -----
+
+    const char *const pRelativePathToTmp = "./tmp/";
+    const char *const pFileName = "dummy.txt";
+    RAII_STRING generatedFilePath =
+        RaiiStringCreateFromCString(pRelativePathToTmp);
+    RaiiStringAppend_cString(&generatedFilePath, pFileName);
+
+    RecursiveMkdir(pRelativePathToTmp);
+
+    FILE *pFileGenerate = NULL;
+    OpenFileWithMode(&pFileGenerate, &generatedFilePath, "wb");
+
+    const uint64_t sizeToCreate = 100000;
+    const uint64_t bufSize = 5000;
+
+    char buf[bufSize];
+    memset(buf, 'a', bufSize - 1);
+    buf[bufSize - 1] = '\0';
+
+    for (uint64_t i = 0; i < sizeToCreate; i += bufSize) {
+        fwrite(buf, 1, bufSize, pFileGenerate);
+    }
+
+    fclose(pFileGenerate);
+
+    //----- Test -----
+
+    FILE *pFile = NULL;
+    OpenFileWithMode(&pFile, &generatedFilePath, "rb");
+
+    const uint64_t offset = 10;
+    TEST_ASSERT_EQUAL(0, fseeko(pFile, offset, SEEK_SET));
+    const off_t currentPosBefore = ftello(pFile);
+    if (currentPosBefore == -1) {
+        fclose(pFile);
+        TEST_FAIL_MESSAGE("Failed to get current position in file.");
+    }
+    TEST_ASSERT_EQUAL_UINT64(offset, currentPosBefore);
+
+    const uint64_t fileSize = GetFileSizeInBytes(pFile);
+    const off_t currentPos = ftello(pFile);
+    if (currentPos == -1) {
+        fclose(pFile);
+        TEST_FAIL_MESSAGE("Failed to get current position in file.");
+    }
+    fclose(pFile);
+
+    UNITY_TEST_ASSERT(sizeToCreate == fileSize, __LINE__, "");
+    TEST_ASSERT_EQUAL_UINT64(offset, currentPos);
+}
+
+//==============================
 // TEST_GROUP_RUNNER
 //==============================
 
@@ -1156,4 +1355,14 @@ TEST_GROUP_RUNNER(TestFileUtils) {
     RUN_TEST_CASE(
         TestFileUtils,
         test_ExtractLastPartOfPath_IgnoresEmptyEntriesInPath_BackwardSlashes);
+
+    // GetFileSizeInBytes(...)
+    RUN_TEST_CASE(TestFileUtils,
+                  test_GetFileSizeInBytes_ReturnsZeroIfPathIsNull);
+    RUN_TEST_CASE(TestFileUtils,
+                  test_GetFileSizeInBytes_ReturnsCorrectSizeOfFile_SmallFile);
+    RUN_TEST_CASE(TestFileUtils,
+                  test_GetFileSizeInBytes_ReturnsCorrectSizeOfFile_MediumFile);
+    RUN_TEST_CASE(TestFileUtils,
+                  test_GetFileSizeInBytes_ReturnsCorrectSizeOfFile_LargeFile);
 }

@@ -3,6 +3,9 @@ project(COMPRESSION_DECOMPRESSION_LIB VERSION 0.0.1 LANGUAGES C)
 
 add_compile_definitions("$<$<NOT:$<CONFIG:Debug>>:NDEBUG>")
 
+# Required for FileUtils.c (and its tests) to use the correct versions of ftello and similar functions
+add_compile_definitions(_FILE_OFFSET_BITS=64)
+
 include(FetchContent)
 include(GNUInstallDirs)
 
