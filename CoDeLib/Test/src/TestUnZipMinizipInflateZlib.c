@@ -27,6 +27,10 @@ static RaiiString g_pathToMultiTextFileAndSubDirZipDeflate;
 static RaiiString g_pathToMultiTextFileAndSubDirZipSource;
 
 TEST_SETUP(TestUnZipMinizipInflateZlib) {
+    if (PathExists("./tmp/")) {
+        TEST_ASSERT_TRUE(RecursiveRmdir("./tmp/"));
+    }
+
     g_someUnZippedDirPath =
         RaiiStringCreateFromCString("SomePath/someUnZippedDirPath.zip");
     g_someZipPath = RaiiStringCreateFromCString("SomePath/someZipPath.zip");

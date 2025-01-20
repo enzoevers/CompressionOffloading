@@ -9,8 +9,7 @@ RaiiString RaiiStringCreateFromCString(const char *pCString) {
 
     RaiiString newRaiistring = {NULL, 0};
 
-    if (lengthWithoutTermination == 0 ||
-        lengthWithoutTermination == MAX_CSTRING_INCLUDING_TERMINATION_LENGTH) {
+    if (lengthWithoutTermination == MAX_CSTRING_INCLUDING_TERMINATION_LENGTH) {
         return newRaiistring;
     }
 
