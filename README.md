@@ -3,29 +3,33 @@
 
 Compress and decompress data with common algorithms and use benchmarks to see if offloading compression and/or decompression for large data sets can improve performance.
 
-As for now, first the [DEFLATE](https://en.wikipedia.org/wiki/Deflate) algorithm will be used with the [ZIP](https://en.wikipedia.org/wiki/ZIP_(file_format)) file format.
+As for now, the [DEFLATE](https://en.wikipedia.org/wiki/Deflate) algorithm will be used with the [ZIP](https://en.wikipedia.org/wiki/ZIP_(file_format)) file format.
 
 ## Personal goals
 - Learn about (de)compression algorithms
-- Get more experience with FPGA/Zynq
+- Learn about the ZIP file format
+- Get more experience with FPGA development
+- Get more experience with embedded Linux on Zynq
+- Get more experience with properly setting up (CMake) libraries
+- Get more experience with DevOps
+- Get more experience with benchmarking
 
 ## Development environment setup
 See [DevEnvSetup.md](./DevEnvSetup.md).
 
 Note that all development should keep the following targets in mind:
 - x64 Linux | Windows | MacOS
-- ARM MacOS
-- ARM Zynq
+- ARM MacOS (64-bit)
+- ARM Zynq (32-bit)
 
 ## Plan
 1. Use the [zlib library](https://www.zlib.net/) to compress and decompress ([example](https://zlib.net/zlib_how.html)). This should run on both Deskptop and the Zynq Processing System (PS).
-    - A single file
+    - Single and multiple files, including nested directories
         - [x] DEFLATE -> compressed data file
+        - [ ] raw file(s) -> ZIP file
         - [ ] DEFLATE -> ZIP file
         - [x] compressed data file -> INFLATE
-        - [x] ZIP file -> INFLATE
-    - Multiple files
-        - [ ] DEFLATE -> ZIP file
+        - [x] ZIP file -> raw file(s)
         - [x] ZIP file -> INFLATE
     - For benchmarking see: https://github.com/okuvshynov/b63
 2. Write the DEFLATE algorithm in C.
