@@ -37,6 +37,8 @@ Now you should be able build and run:
 
 > Note that you may have to close and re-open viusal studio to get the updated PATH.
 
+For some reason it only seems to work in PowerShell, not in the command prompt. This should be fixed.
+
 ```cmd
 $ cd <root of this repositoory>
 $ git submodule update --init
