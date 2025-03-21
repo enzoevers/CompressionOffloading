@@ -152,7 +152,7 @@ def BuildAndInstallMinizipNg(
     print("==============================")
     print(ProjectName + ": Configuring ({})".format(BuildTypeString))
     print("==============================")
-    configureCommand = 'cmake -G "{0}" -DCMAKE_TOOLCHAIN_FILE="{1}" -S {2} -B {3} -DCMAKE_INSTALL_PREFIX="{4}" -DCMAKE_BUILD_TYPE={5} -DBUILD_SHARED_LIBS=OFF -DMZ_COMPAT=ON -DMZ_ZLIB=OFF -DMZ_BZIP2=OFF -DMZ_LZMA=OFF -DMZ_ZSTD=OFF -DMZ_LIBCOMP=OFF -DMZ_FETCH_LIBS=OFF -DMZ_PKCRYPT=OFF -DMZ_WZAES=OFF -DMZ_OPENSSL=OFF -DMZ_LIBBSD=OFF -DMZ_ICONV=OFF'.format(
+    configureCommand = 'cmake -G "{0}" -DCMAKE_TOOLCHAIN_FILE="{1}" -S {2} -B {3} -DCMAKE_INSTALL_PREFIX="{4}" -DCMAKE_BUILD_TYPE={5} -DBUILD_SHARED_LIBS=OFF -DMZ_COMPAT=ON -DMZ_ZLIB=OFF -DMZ_BZIP2=OFF -DMZ_LZMA=OFF -DMZ_ZSTD=OFF -DMZ_LIBCOMP=OFF -DMZ_FETCH_LIBS=OFF -DMZ_PKCRYPT=OFF -DMZ_WZAES=OFF -DMZ_OPENSSL=OFF -DMZ_LIBBSD=OFF -DMZ_ICONV=OFF -DUSE_FILE_OFFSET_BITS64=ON'.format(
         buildEnv.GetCmakeGenerator(),
         buildEnv.GetCustomToolChainPath(),
         TopLevelCMakeListsDirectory,
