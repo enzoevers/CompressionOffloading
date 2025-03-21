@@ -2,7 +2,6 @@
 #include <assert.h>
 #include <ctype.h>
 #include <stdbool.h>
-#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -278,7 +277,7 @@ size_t ExtractLastPartOfPath(const char *const pPath, char *const pDestBuffer,
         return SIZE_MAX;
     }
 
-    const size_t pathLenght = strnlen(pPath, MAX_PATH_LENGTH_WTH_TERMINATOR);
+    size_t pathLenght = strnlen(pPath, MAX_PATH_LENGTH_WTH_TERMINATOR);
     if (pathLenght == 0 || pathLenght == MAX_PATH_LENGTH_WTH_TERMINATOR) {
         return SIZE_MAX;
     }
@@ -287,11 +286,25 @@ size_t ExtractLastPartOfPath(const char *const pPath, char *const pDestBuffer,
         return SIZE_MAX;
     }
 
+    char lastChar = pPath[pathLenght - 1];
+    bool isDir = lastChar == '/' || lastChar == '\\';
+
+    if (isDir) {
+        // Ignore empty sections of the path
+        for (size_t i = pathLenght - 2; i > 0; --i) {
+            if (pPath[i] == '/' || pPath[i] == '\\') {
+                // Assigning again because this may be different from the last
+                lastChar = pPath[i];
+                pathLenght--;
+            } else {
+                break;
+            }
+        }
+    }
+
     char *pLocalPath = (char *)calloc(pathLenght + 1, sizeof(char));
     memcpy(pLocalPath, pPath, pathLenght + 1);
-
-    const char lastChar = pLocalPath[pathLenght - 1];
-    bool isDir = lastChar == '/' || lastChar == '\\';
+    pLocalPath[pathLenght] = '\0';
 
     if (isDir) {
         // Remove the last separator to make getting the file or directory name
@@ -341,7 +354,8 @@ size_t ExtractLastPartOfPath(const char *const pPath, char *const pDestBuffer,
     return startIndexOfNameInPath;
 }
 
-void OpenFileWithMode(FILE **pInFile, RaiiString *pFullPath, char *pOpenMode) {
+void OpenFileWithMode(FILE **pInFile, const RaiiString *const pFullPath,
+                      const char *const pOpenMode) {
     *pInFile = fopen(pFullPath->pString, pOpenMode);
     if (*pInFile == NULL) {
         printf("Failed to open file: %s\n", pFullPath->pString);
@@ -349,21 +363,31 @@ void OpenFileWithMode(FILE **pInFile, RaiiString *pFullPath, char *pOpenMode) {
     }
 }
 
-size_t GetFileSizeInBytes(FILE *pFile) {
-    fseek(pFile, 0, SEEK_END);
-    const size_t fileSize = ftell(pFile);
+uint64_t GetFileSizeInBytes(FILE *pFile) {
+    if (pFile == NULL) {
+        return 0;
+    }
+
+    fseeko(pFile, 0, SEEK_END);
+    const off_t fileSize = ftello(pFile);
     rewind(pFile);
+
+    if (fileSize == -1) {
+        printf("Failed to get file size: %s\n", strerror(errno));
+        return 0;
+    }
+
     return fileSize;
 }
 
 bool FilesAreEqual(FILE *pFile1, FILE *pFile2) {
-    const size_t fileSize1 = GetFileSizeInBytes(pFile1);
-    const size_t fileSize2 = GetFileSizeInBytes(pFile2);
+    const uint64_t fileSize1 = GetFileSizeInBytes(pFile1);
+    const uint64_t fileSize2 = GetFileSizeInBytes(pFile2);
 
     if (fileSize1 != fileSize2) {
         printf("File sizes not equal:\n");
-        printf("    fileSize1: %lu\n", (unsigned long)fileSize1);
-        printf("    fileSize2: %lu\n", (unsigned long)fileSize2);
+        printf("    fileSize1: %llu\n", (unsigned long long)fileSize1);
+        printf("    fileSize2: %llu\n", (unsigned long long)fileSize2);
         return false;
     }
 

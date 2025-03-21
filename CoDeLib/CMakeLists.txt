@@ -1,6 +1,15 @@
 cmake_minimum_required(VERSION 3.28)
 project(COMPRESSION_DECOMPRESSION_LIB VERSION 0.0.1 LANGUAGES C)
 
+add_compile_definitions("$<$<NOT:$<CONFIG:Debug>>:NDEBUG>")
+
+# Required for FileUtils.c (and its tests) to use the correct versions of ftello and similar functions
+add_compile_definitions(_FILE_OFFSET_BITS=64)
+# The follwing may be interesting in the future
+# add_compile_definitions(__USE_LARGEFILE64)
+# add_compile_definitions(_LARGEFILE_SOURCE)
+# add_compile_definitions(_LARGEFILE64_SOURCE)
+
 include(FetchContent)
 include(GNUInstallDirs)
 
@@ -20,6 +29,7 @@ set(COMMON_HEADERS
     ${CoDeLib_PUBLIC_INCLUDE_PATH}/IDeflate.h
     ${CoDeLib_PUBLIC_INCLUDE_PATH}/IInflate.h
     ${CoDeLib_PUBLIC_INCLUDE_PATH}/IUnZip.h
+    ${CoDeLib_PUBLIC_INCLUDE_PATH}/IZip.h
 )
 install(FILES ${COMMON_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/CoDeLib)
 
@@ -27,12 +37,13 @@ add_subdirectory(Deflate_zlib)
 add_subdirectory(Inflate_zlib)
 add_subdirectory(FileUtils)
 add_subdirectory(UnZip_minizip)
+add_subdirectory(Zip_minizip)
 add_subdirectory(RaiiString)
 add_subdirectory(ZipContentInfo)
 add_subdirectory(Test)
 
 install(
-    TARGETS CoDeLib Deflate_zlib Inflate_zlib UnZip_minizip RaiiString ZipContentInfo FileUtils
+    TARGETS CoDeLib Deflate_zlib Inflate_zlib UnZip_minizip Zip_minizip RaiiString ZipContentInfo FileUtils
     EXPORT CoDeLibTargets
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

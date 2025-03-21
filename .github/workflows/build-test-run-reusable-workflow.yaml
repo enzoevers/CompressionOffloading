@@ -51,7 +51,7 @@ jobs:
     runs-on: ${{ inputs.runner }}
     name : Test (Target ${{ inputs.target-platform }} - Host ${{ inputs.host-platform }})
     needs: build
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -62,7 +62,7 @@ jobs:
           name: CoDeLibBuildArtifacts-target-${{ inputs.target-platform }}-host-${{ inputs.host-platform }}
           path: CoDeLib/Build
       - run: |
-          python -u Scripts/RunTest.py
+          python -u Scripts/RunTest.py --RunLongTests
       - name: 'Upload test results'
         uses: actions/upload-artifact@v4
         with:

@@ -1,4 +1,6 @@
 #pragma once
 
+#include <stdbool.h>
+
 void SetupTestFileUtils(char *pFullPathToBenchmarkTestFiles,
-                        char *pCurrentWorkingDirectory);
+                        char *pCurrentWorkingDirectory, bool runLongTests);

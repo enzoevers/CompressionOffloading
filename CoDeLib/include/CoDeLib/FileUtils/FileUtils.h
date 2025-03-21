@@ -2,6 +2,7 @@
 
 #include <CoDeLib/RaiiString/RaiiString.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 
 #define MAX_PATH_LENGTH 256
@@ -81,6 +82,7 @@ returned.
 size_t ExtractLastPartOfPath(const char *const pPath, char *const pDestBuffer,
                              size_t destBufferSize);
 
-void OpenFileWithMode(FILE **pInFile, RaiiString *pFullPath, char *pOpenMode);
-size_t GetFileSizeInBytes(FILE *pFile);
+void OpenFileWithMode(FILE **pInFile, const RaiiString *const pFullPath,
+                      const char *const pOpenMode);
+uint64_t GetFileSizeInBytes(FILE *pFile);
 bool FilesAreEqual(FILE *pFile1, FILE *pFile2);

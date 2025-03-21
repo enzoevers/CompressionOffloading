@@ -93,11 +93,11 @@ TEST(
 
 TEST(
     TestRaiiString,
-    test_RaiiStringCreateFromCString_SetsLengthOfZeroAndNullptrIfProvidedEmptyString) {
+    test_RaiiStringCreateFromCString_SetsExpectedLengthAndPtrIfProvidedEmptyString) {
     const char *pCString = "";
     raiiString = RaiiStringCreateFromCString(pCString);
-    TEST_ASSERT_NULL(raiiString.pString);
-    TEST_ASSERT_EQUAL(0, raiiString.lengthWithTermination);
+    TEST_ASSERT_NOT_NULL(raiiString.pString);
+    TEST_ASSERT_EQUAL(1, raiiString.lengthWithTermination);
 }
 
 //==============================
@@ -297,7 +297,7 @@ TEST_GROUP_RUNNER(TestRaiiString) {
         test_RaiiStringCreateFromCString_SetsZeroLengthAndNullptrIfStringLengthIsGreaterThanMaxTotalLength);
     RUN_TEST_CASE(
         TestRaiiString,
-        test_RaiiStringCreateFromCString_SetsLengthOfZeroAndNullptrIfProvidedEmptyString);
+        test_RaiiStringCreateFromCString_SetsExpectedLengthAndPtrIfProvidedEmptyString);
 
     // RaiiStringClean()
     RUN_TEST_CASE(TestRaiiString,
