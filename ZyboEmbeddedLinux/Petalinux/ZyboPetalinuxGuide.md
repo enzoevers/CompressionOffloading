@@ -237,6 +237,7 @@ $ petalinux-config -c rootfs
 ```
 
 - In the config enable `user packages > peekpoke`.
+- In the config enable `Filesystem Packages > misc > gdb > gdb`.
 - Exit and save
 
 #### 8.6 Build the project
@@ -329,15 +330,31 @@ By using wic, prepering the SD card and moving files is all handled automaticall
 
 ```sh
 $ cd ~/petalinux/BasicLinuxZybo
+$ source settings.sh
 ```
 
-The command below uses `~/petalinux/BasicLinuxZybo/build/rootfs.wks` for creating the wic image. By default (in the version used in these steps) this will create a `2GB` boot partition and a `4G` root partition. So make sure that your SD card is large enough. If you want to change this, see the [petalinux-package wic Command Options](https://docs.amd.com/r/en-US/ug1144-petalinux-tools-reference-guide/petalinux-package-wic-Command-Options) documentation.
+The command below uses `~/petalinux/BasicLinuxZybo/build/rootfs.wks` for creating the wic image. By default (in the version used in these steps) this will create a `2GB` boot partition and a `4G` root partition. So make sure that your SD card is large enough.
 
 ```sh
 $ petalinux-package wic
 ```
 
 The console output will show where the wic image is created.
+
+To see al the options for the wic generation command use:
+
+```sh
+$ petalinux-package wic -h
+```
+
+If you want a bigger rootfs partition size for example run:
+
+```sh
+$ petalinux-package wic --size ,32G
+```
+
+For more information see the [petalinux-package wic Command Options](https://docs.amd.com/r/en-US/ug1144-petalinux-tools-reference-guide/petalinux-package-wic-Command-Options) documentation.
+
 
 <details>
   <summary>(Optional) 9.1.1 Inspect the wic image</summary>
