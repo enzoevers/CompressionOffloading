@@ -26,7 +26,7 @@ Note that all development should keep the following targets in mind:
 1. Use the [zlib library](https://www.zlib.net/) to compress and decompress ([example](https://zlib.net/zlib_how.html)). This should run on both Deskptop and the Zynq Processing System (PS).
     - Single and multiple files, including nested directories
         - [x] DEFLATE -> compressed data file
-        - [ ] raw file(s) -> ZIP file
+        - [x] raw file(s) -> ZIP file
         - [ ] DEFLATE -> ZIP file
         - [x] compressed data file -> INFLATE
         - [x] ZIP file -> raw file(s)
