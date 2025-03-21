@@ -74,7 +74,7 @@ def BuildAndInstallZlib(
     print("==============================")
     print(ProjectName + ": Configuring ({})".format(BuildTypeString))
     print("==============================")
-    configureCommand = 'cmake -G "{0}" -DCMAKE_TOOLCHAIN_FILE="{1}" -S {2} -B {3} -DCMAKE_INSTALL_PREFIX="{4}" -DZLIB_BUILD_EXAMPLES=OFF -DCMAKE_BUILD_TYPE={5}'.format(
+    configureCommand = 'cmake -G "{0}" -DCMAKE_TOOLCHAIN_FILE="{1}" -S {2} -B {3} -DCMAKE_INSTALL_PREFIX="{4}" -DZLIB_BUILD_EXAMPLES=OFF -DCMAKE_BUILD_TYPE={5} -DZLIB_BUILD_SHARED=OFF'.format(
         buildEnv.GetCmakeGenerator(),
         buildEnv.GetCustomToolChainPath(),
         TopLevelCMakeListsDirectory,
