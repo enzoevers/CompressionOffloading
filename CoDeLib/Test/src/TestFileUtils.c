@@ -37,6 +37,62 @@ TEST_TEAR_DOWN(TestFileUtils) {
 }
 
 //==============================
+// IsPathNormalized(...)
+//==============================
+
+TEST(TestFileUtils, test_IsPathNormalized_ReturnsFalseIfPathIsNull) {
+    TEST_ASSERT_FALSE(IsPathNormalized(NULL));
+}
+
+TEST(TestFileUtils, test_IsPathNormalized_ReturnsTrueIfPathIsEmpty) {
+    TEST_ASSERT_TRUE(IsPathNormalized(""));
+}
+
+TEST(TestFileUtils, test_IsPathNormalized_ReturnsFalseIfPathIsNotNormalized) {
+    TEST_ASSERT_FALSE(IsPathNormalized("a\\b/c\\d"));
+}
+
+TEST(TestFileUtils, test_IsPathNormalized_ReturnsTrueIfPathIsNormalized) {
+    TEST_ASSERT_TRUE(IsPathNormalized("a/b/c/d"));
+}
+
+//==============================
+// NormailizePathSeparatorsInPlace(...)
+//==============================
+
+TEST(TestFileUtils,
+     test_NormailizePathSeparatorsInPlace_ReturnsFalseIfPathIsNull) {
+    TEST_ASSERT_NULL(NormailizePathSeparatorsInPlace(NULL));
+}
+
+TEST(TestFileUtils,
+     test_NormailizePathSeparatorsInPlace_NormalizesPathSeparators) {
+    RAII_STRING path = RaiiStringCreateFromCString("a\\b/c\\d");
+
+    char *pNormalizedPath = NormailizePathSeparatorsInPlace(path.pString);
+    TEST_ASSERT_EQUAL(pNormalizedPath, path.pString);
+    TEST_ASSERT_EQUAL_STRING("a/b/c/d", path.pString);
+}
+
+TEST(TestFileUtils,
+     test_NormailizePathSeparatorsInPlace_DoesNotChangeAlreadyNormalized) {
+    RAII_STRING path = RaiiStringCreateFromCString("a/b/c/d");
+
+    char *pNormalizedPath = NormailizePathSeparatorsInPlace(path.pString);
+    TEST_ASSERT_EQUAL(pNormalizedPath, path.pString);
+    TEST_ASSERT_EQUAL_STRING("a/b/c/d", path.pString);
+}
+
+TEST(TestFileUtils,
+     test_NormailizePathSeparatorsInPlace_NormalizesWithWindowsStylePrefix) {
+    RAII_STRING path = RaiiStringCreateFromCString("C:\\a\\b\\");
+
+    char *pNormalizedPath = NormailizePathSeparatorsInPlace(path.pString);
+    TEST_ASSERT_EQUAL(pNormalizedPath, path.pString);
+    TEST_ASSERT_EQUAL_STRING("C:/a/b/", path.pString);
+}
+
+//==============================
 // IsAbsolutePath(...)
 //==============================
 
@@ -213,39 +269,21 @@ TEST(TestFileUtils,
     TEST_ASSERT_TRUE(success);
 }
 
-TEST(
-    TestFileUtils,
-    test_GetAbsolutePath_ReturnsTrueIfPathIsAlreadyAbsoluteAndCopiesItToBuffer_TrailingSlash_WindowsStyle) {
+TEST(TestFileUtils, test_GetAbsolutePath_ReturnsFalseIfIfIsNotNormalized) {
     char localBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
-    char *pPath = "C:\\a\\b\\";
+    char *pPath = "C:\\a/b\\";
 
     bool success =
         GetAbsolutePath(pPath, localBuffer, MAX_PATH_LENGTH_WTH_TERMINATOR);
 
-    TEST_ASSERT_TRUE(success);
-    TEST_ASSERT_NOT_EQUAL(pPath, &localBuffer[0]);
-    TEST_ASSERT_EQUAL_STRING(pPath, localBuffer);
+    TEST_ASSERT_FALSE(success);
 }
 
 TEST(
     TestFileUtils,
-    test_GetAbsolutePath_ReturnsTrueIfPathIsAlreadyAbsoluteAndCopiesItToBuffer_NoTrailingSlash_WindowsStyle) {
+    test_GetAbsolutePath_ReturnsTrueIfPathIsAlreadyAbsoluteAndCopiesItToBuffer_TrailingSlash_PosixStyleWindowsPrefix) {
     char localBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
-    char *pPath = "C:\\a\\b";
-
-    bool success =
-        GetAbsolutePath(pPath, localBuffer, MAX_PATH_LENGTH_WTH_TERMINATOR);
-
-    TEST_ASSERT_TRUE(success);
-    TEST_ASSERT_NOT_EQUAL(pPath, &localBuffer[0]);
-    TEST_ASSERT_EQUAL_STRING(pPath, localBuffer);
-}
-
-TEST(
-    TestFileUtils,
-    test_GetAbsolutePath_ReturnsTrueIfPathIsAlreadyAbsoluteAndCopiesItToBuffer_FileExtention_WindowsStyle) {
-    char localBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
-    char *pPath = "C:\\a\\b.txt";
+    char *pPath = "C:/a/b/";
 
     bool success =
         GetAbsolutePath(pPath, localBuffer, MAX_PATH_LENGTH_WTH_TERMINATOR);
@@ -295,28 +333,6 @@ TEST(
     TEST_ASSERT_TRUE(success);
     TEST_ASSERT_NOT_EQUAL(pPath, &localBuffer[0]);
     TEST_ASSERT_EQUAL_STRING(pPath, localBuffer);
-}
-
-TEST(
-    TestFileUtils,
-    test_GetAbsolutePath_ReturnsTrueIfPathIsRelativeAndCopiesItToBuffer_TrailingSlash_WindowsStyle) {
-    char expectedAbsolutePathBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
-    GetCurrentWorkingDirectory(expectedAbsolutePathBuffer,
-                               MAX_PATH_LENGTH_WTH_TERMINATOR);
-    RAII_STRING expectedAbsolutePath =
-        RaiiStringCreateFromCString(expectedAbsolutePathBuffer);
-
-    char localBuffer[MAX_PATH_LENGTH_WTH_TERMINATOR];
-    char *pPath = "b\\";
-
-    RaiiStringAppend_cString(&expectedAbsolutePath, pPath);
-
-    bool success =
-        GetAbsolutePath(pPath, localBuffer, MAX_PATH_LENGTH_WTH_TERMINATOR);
-
-    TEST_ASSERT_TRUE(success);
-    TEST_ASSERT_GREATER_THAN(strlen(pPath), strlen(&localBuffer[0]));
-    TEST_ASSERT_EQUAL_STRING(expectedAbsolutePath.pString, localBuffer);
 }
 
 TEST(
@@ -1204,6 +1220,30 @@ TEST(TestFileUtils,
 //==============================
 
 TEST_GROUP_RUNNER(TestFileUtils) {
+    // IsPathNormalized(...)
+    RUN_TEST_CASE(TestFileUtils,
+                  test_IsPathNormalized_ReturnsFalseIfPathIsNull);
+    RUN_TEST_CASE(TestFileUtils,
+                  test_IsPathNormalized_ReturnsTrueIfPathIsEmpty);
+    RUN_TEST_CASE(TestFileUtils,
+                  test_IsPathNormalized_ReturnsFalseIfPathIsNotNormalized);
+    RUN_TEST_CASE(TestFileUtils,
+                  test_IsPathNormalized_ReturnsTrueIfPathIsNormalized);
+
+    // NormalizePathSeparator(...)
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_NormailizePathSeparatorsInPlace_ReturnsFalseIfPathIsNull);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_NormailizePathSeparatorsInPlace_NormalizesPathSeparators);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_NormailizePathSeparatorsInPlace_DoesNotChangeAlreadyNormalized);
+    RUN_TEST_CASE(
+        TestFileUtils,
+        test_NormailizePathSeparatorsInPlace_NormalizesWithWindowsStylePrefix);
+
     // IsAbsolutePath(...)
     RUN_TEST_CASE(TestFileUtils, test_IsAbsolutePath_ReturnsFalseIfPathIsNull);
     RUN_TEST_CASE(TestFileUtils, test_IsAbsolutePath_ReturnsFalseIfPathIsEmpty);
@@ -1257,15 +1297,11 @@ TEST_GROUP_RUNNER(TestFileUtils) {
     RUN_TEST_CASE(
         TestFileUtils,
         test_GetAbsolutePath_AllowsBuffersToBeBiggerThanMaxPathLength);
+    RUN_TEST_CASE(TestFileUtils,
+                  test_GetAbsolutePath_ReturnsFalseIfIfIsNotNormalized);
     RUN_TEST_CASE(
         TestFileUtils,
-        test_GetAbsolutePath_ReturnsTrueIfPathIsAlreadyAbsoluteAndCopiesItToBuffer_TrailingSlash_WindowsStyle);
-    RUN_TEST_CASE(
-        TestFileUtils,
-        test_GetAbsolutePath_ReturnsTrueIfPathIsAlreadyAbsoluteAndCopiesItToBuffer_NoTrailingSlash_WindowsStyle);
-    RUN_TEST_CASE(
-        TestFileUtils,
-        test_GetAbsolutePath_ReturnsTrueIfPathIsAlreadyAbsoluteAndCopiesItToBuffer_FileExtention_WindowsStyle);
+        test_GetAbsolutePath_ReturnsTrueIfPathIsAlreadyAbsoluteAndCopiesItToBuffer_TrailingSlash_PosixStyleWindowsPrefix);
     RUN_TEST_CASE(
         TestFileUtils,
         test_GetAbsolutePath_ReturnsTrueIfPathIsAlreadyAbsoluteAndCopiesItToBuffer_TrailingSlash_PosixStyle);
@@ -1275,9 +1311,6 @@ TEST_GROUP_RUNNER(TestFileUtils) {
     RUN_TEST_CASE(
         TestFileUtils,
         test_GetAbsolutePath_ReturnsTrueIfPathIsAlreadyAbsoluteAndCopiesItToBuffer_FileExtentions_PosixStyle);
-    RUN_TEST_CASE(
-        TestFileUtils,
-        test_GetAbsolutePath_ReturnsTrueIfPathIsRelativeAndCopiesItToBuffer_TrailingSlash_WindowsStyle);
     RUN_TEST_CASE(
         TestFileUtils,
         test_GetAbsolutePath_ReturnsTrueIfPathIsRelativeAndCopiesItToBuffer_TrailingSlash_PosixStyle);
