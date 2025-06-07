@@ -8,6 +8,25 @@
 #define MAX_PATH_LENGTH 256
 #define MAX_PATH_LENGTH_WTH_TERMINATOR (MAX_PATH_LENGTH + 1)
 
+#define PATH_SEPARATOR '/'
+
+/*!
+@brief Checks if a path is normalized. A normalized path has no escaped
+backward slashes ('\\') and uses forward slashes ('/') as path separators.
+@param pPath The path to check.
+@return true if the path is normalized, false otherwise.
+*/
+bool IsPathNormalized(const char *const pPath);
+
+/*!
+@brief Normalizes the path separators in a path. This function replaces all
+escaped backward slashes ('\\') with forward slashes ('/').
+@param pPath The path to normalize. The path will be modified in place.
+@return pPath if the path was successfully normalized and placed in pDestPath,
+NULL otherwise
+*/
+char *NormailizePathSeparatorsInPlace(char *pPath);
+
 /*!
 @brief Recursively creates a directory. If the directory already exists, nothing
 happens.

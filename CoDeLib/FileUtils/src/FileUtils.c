@@ -54,6 +54,34 @@ int _HandleFtwCallback_Remove(const char *fpath, const struct stat *sb,
 // Public function implementations
 //=========================
 
+bool IsPathNormalized(const char *const pPath) {
+    if (pPath == NULL) {
+        return false;
+    }
+
+    for (size_t i = 0; i < strlen(pPath); ++i) {
+        if (pPath[i] == '\\') {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+char *NormailizePathSeparatorsInPlace(char *pPath) {
+    if (pPath == NULL) {
+        return NULL;
+    }
+
+    for (size_t i = 0; i < strlen(pPath); ++i) {
+        if (pPath[i] == '\\') {
+            pPath[i] = '/';
+        }
+    }
+
+    return pPath;
+}
+
 // Based on
 // https://nachtimwald.com/2019/07/10/recursive-create-directory-in-c-revisited/
 bool RecursiveMkdir(const char *const pDirname) {
@@ -114,9 +142,11 @@ bool RecursiveMkdir(const char *const pDirname) {
         // Adds null terminator after the seperator
         pPathToCreate[dirnamePartLength] = '\0';
 
-        success = _CreateDir(pPathToCreate);
-        if (!success) {
-            break;
+        if (!PathExists(pPathToCreate)) {
+            success = _CreateDir(pPathToCreate);
+            if (!success) {
+                break;
+            }
         }
 
         pTargetPath++;
@@ -171,7 +201,8 @@ bool IsAbsolutePath(const char *pPath) {
 
 bool GetAbsolutePath(const char *pPath, char *const pAbsolutePath,
                      const size_t absolutePathSize) {
-    if (pPath == NULL || pAbsolutePath == NULL || absolutePathSize == 0) {
+    if (pPath == NULL || pAbsolutePath == NULL || absolutePathSize == 0 ||
+        !IsPathNormalized(pPath)) {
         return false;
     }
 
@@ -200,6 +231,8 @@ bool GetAbsolutePath(const char *pPath, char *const pAbsolutePath,
         // (dirnameLength + 1) to include the null terminator
         memcpy(&pAbsolutePath[0], pPath, sizeof(char) * (pathLenght + 1));
     }
+
+    NormailizePathSeparatorsInPlace(pAbsolutePath);
 
     return true;
 }
@@ -231,6 +264,8 @@ char *GetCurrentWorkingDirectory(char *pFullPath, size_t fullPathSize) {
         pFullPath[currentPathLength] = '/';
         pFullPath[currentPathLength + 1] = '\0';
     }
+
+    NormailizePathSeparatorsInPlace(pFullPath);
 
     return pFullPath;
 }

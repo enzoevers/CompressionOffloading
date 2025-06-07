@@ -22,10 +22,10 @@ static void RunAllTests(void) {
 }
 
 int main(int argc, const char **argv) {
-    RAII_STRING fullPathToBenchmarkTestFiles;
+    RAII_STRING fullPathToBenchmarkTestFiles = {NULL, 0};
 
     // Should end with '/'
-    RAII_STRING currentWorkingDirectory;
+    RAII_STRING currentWorkingDirectory = {NULL, 0};
     bool runLongTests = false;
 
     // TODO: use getopt(...)
@@ -33,8 +33,18 @@ int main(int argc, const char **argv) {
         printf("Not enough arguments provided\n");
         return 1;
     } else {
-        fullPathToBenchmarkTestFiles = RaiiStringCreateFromCString(argv[1]);
-        currentWorkingDirectory = RaiiStringCreateFromCString(argv[2]);
+        RAII_STRING unNormalizedFullPathToBenchmarkTestFiles =
+            RaiiStringCreateFromCString(argv[1]);
+        fullPathToBenchmarkTestFiles =
+            RaiiStringCreateFromCString(NormailizePathSeparatorsInPlace(
+                unNormalizedFullPathToBenchmarkTestFiles.pString));
+
+        RAII_STRING unNormalizedCurrentWorkingDirectory =
+            RaiiStringCreateFromCString(argv[2]);
+        currentWorkingDirectory =
+            RaiiStringCreateFromCString(NormailizePathSeparatorsInPlace(
+                unNormalizedCurrentWorkingDirectory.pString));
+
         runLongTests = strcmp(argv[3], "true") == 0;
     }
 
