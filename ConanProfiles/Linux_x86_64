@@ -1,0 +1,10 @@
+[settings]
+arch=x86_64
+compiler=gcc
+compiler.libcxx=libstdc++11
+compiler.version=14
+os=Linux
+
+# https://github.com/conan-io/conan-center-index/issues/19340
+[conf]
+tools.build:compiler_executables={ "c" : "gcc", "cpp": "g++" }

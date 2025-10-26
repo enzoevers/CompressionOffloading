@@ -18,7 +18,11 @@ Test*.txt*
 
 # Python
 __pycache__/
+.venv
 
 # Custom
 AddedFlags.cmake
 tmp
+
+# Conan
+build/

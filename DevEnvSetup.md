@@ -32,6 +32,13 @@ Install the recommended packages for this reposity (see `./vscode/extensions.jso
 - Install **C development packages**: `$ apt install build-essential` 
 - Install **CMake**: https://cmake.org/download/ (>= 3.28)
 
+# Conan
+
+```sh
+$ python ./Scripts/ConanSetup.py
+```
+
+
 # Verify
 Now you should be able build and run:
 

@@ -52,9 +52,7 @@ def BuildBenchmark(
     CoDeLibInstallDirectory = Path(
         CoDeLibPath / "Install" / targetPlatformString / BuildTypeString
     )
-    ExternalZlibLibInstallPath = Path(
-        ExternalLibPath / "zlib/Install" / targetPlatformString / BuildTypeString
-    )
+
     ExternalMinizipNgLibInstallPath = Path(
         ExternalLibPath / "minizip-ng/Install" / targetPlatformString / BuildTypeString
     )
@@ -72,16 +70,22 @@ def BuildBenchmark(
     print("==============================")
     print(ProjectName + ": Configuring ({})".format(BuildTypeString))
     print("==============================")
-    configureCommand = 'cmake -G "{0}" -DCMAKE_TOOLCHAIN_FILE="{1}" -S {2} -B {3} -DCMAKE_BUILD_TYPE={4} -DZLIB_ROOT="{5}" -DCMAKE_PREFIX_PATH="{6};{7}"'.format(
+    configureCommand = 'cmake -G "{0}" -DCMAKE_TOOLCHAIN_FILE="{1}" -S {2} -B {3} -DCMAKE_BUILD_TYPE={4} -DMINIZIP_INSTALL_PATH="{5}" -DCODELIB_INSTALL_PATH="{6}"'.format(
         buildEnv.GetCmakeGenerator(),
-        buildEnv.GetCustomToolChainPath(),
+        Path(
+            RepositoryRootPath
+            / "build/conan/build"
+            / BuildTypeString
+            / "generators"
+            / "conan_toolchain.cmake"
+        ),
         BenchmarkRootPath,
         BuildDirectory,
         BuildTypeString,
-        ExternalZlibLibInstallPath,
-        CoDeLibInstallDirectory,
         ExternalMinizipNgLibInstallPath,
+        CoDeLibInstallDirectory,
     )
+    print(configureCommand)
     subprocess.run(
         configureCommand,
         shell=True,
@@ -91,7 +95,10 @@ def BuildBenchmark(
     print("==============================")
     print(ProjectName + ": Building ({})".format(BuildTypeString))
     print("==============================")
-    buildCommand = "cmake --build {0} -- -j 4".format(BuildDirectory)
+    buildCommand = "cmake --build {0} --config {1} -- -j 4".format(
+        BuildDirectory, BuildTypeString
+    )
+    print(buildCommand)
     subprocess.run(
         buildCommand,
         shell=True,

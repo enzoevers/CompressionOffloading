@@ -30,6 +30,7 @@ jobs:
         with:
           python-version: '3.11'
       - run: |
+          python -u Scripts/ConanSetup.py
           python -u Scripts/BuildAndInstallExternalLibs.py --TargetPlatform ${{ inputs.target-platform }}
           python -u Scripts/BuildAndInstallCoDeLib.py --TargetPlatform ${{ inputs.target-platform }}
           python -u Scripts/BuildBenchmark.py --TargetPlatform ${{ inputs.target-platform }}
