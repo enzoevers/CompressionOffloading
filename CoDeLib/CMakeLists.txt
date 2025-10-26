@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.28)
 project(COMPRESSION_DECOMPRESSION_LIB VERSION 0.0.1 LANGUAGES C)
 
+list(APPEND CMAKE_PREFIX_PATH ${MINIZIP_INSTALL_PATH})
+message(STATUS "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
+
 add_compile_definitions("$<$<NOT:$<CONFIG:Debug>>:NDEBUG>")
 
 # Required for FileUtils.c (and its tests) to use the correct versions of ftello and similar functions

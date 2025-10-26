@@ -37,82 +37,6 @@ ExternalLibPath = Path(RepositoryRootPath / "External")
 
 
 ##############################
-# zlib
-##############################
-def BuildAndInstallZlib(
-    buildEnv: EnvironmentConfig.EnvironmentConfiguration,
-    buildConfig: EnvironmentConfig.BuildConfig = EnvironmentConfig.BuildConfig.DEBUG,
-):
-    ProjectName = "zlib"
-
-    BuildTypeString = EnvironmentConfig.BuildConfig.ToCMakeBuildType(buildConfig)
-    targetPlatformString = EnvironmentConfig.Platform.PlatformToOsName(
-        buildEnv.GetTargetPlatform()
-    )
-
-    TopLevelCMakeListsDirectory = Path(ExternalLibPath / ProjectName)
-    BuildDirectory = Path(
-        ExternalLibPath / ProjectName / "Build" / targetPlatformString / BuildTypeString
-    )
-    InstallDirectory = Path(
-        ExternalLibPath
-        / ProjectName
-        / "Install"
-        / targetPlatformString
-        / BuildTypeString
-    )
-
-    if not BuildDirectory.exists():
-        BuildDirectory.mkdir(parents=True)
-
-    if InstallDirectory.exists():
-        shutil.rmtree(InstallDirectory)
-        InstallDirectory.mkdir(parents=True)
-
-    os.chdir(RepositoryRootPath)
-
-    print("==============================")
-    print(ProjectName + ": Configuring ({})".format(BuildTypeString))
-    print("==============================")
-    configureCommand = 'cmake -G "{0}" -DCMAKE_TOOLCHAIN_FILE="{1}" -S {2} -B {3} -DCMAKE_INSTALL_PREFIX="{4}" -DZLIB_BUILD_EXAMPLES=OFF -DCMAKE_BUILD_TYPE={5} -DZLIB_BUILD_SHARED=OFF'.format(
-        buildEnv.GetCmakeGenerator(),
-        buildEnv.GetCustomToolChainPath(),
-        TopLevelCMakeListsDirectory,
-        BuildDirectory,
-        InstallDirectory,
-        BuildTypeString,
-    )
-    print(configureCommand)
-    subprocess.run(
-        configureCommand,
-        shell=True,
-        check=True,
-    )
-
-    print("==============================")
-    print(ProjectName + ": Building ({})".format(BuildTypeString))
-    print("==============================")
-    buildCommand = "cmake --build {0} -- -j 4".format(BuildDirectory)
-    print(buildCommand)
-    subprocess.run(
-        buildCommand,
-        shell=True,
-        check=True,
-    )
-
-    print("==============================")
-    print(ProjectName + ": Installing ({})".format(BuildTypeString))
-    print("==============================")
-    installCommand = "cmake --install {0}".format(BuildDirectory)
-    print(installCommand)
-    subprocess.run(
-        installCommand,
-        shell=True,
-        check=True,
-    )
-
-
-##############################
 # minizip-ng
 ##############################
 def BuildAndInstallMinizipNg(
@@ -170,7 +94,9 @@ def BuildAndInstallMinizipNg(
     print("==============================")
     print(ProjectName + ": Building ({})".format(BuildTypeString))
     print("==============================")
-    buildCommand = "cmake --build {0}".format(BuildDirectory)
+    buildCommand = "cmake --build {0} --config {1} -- -j 4".format(
+        BuildDirectory, BuildTypeString
+    )
     print(buildCommand)
     subprocess.run(
         buildCommand,
@@ -193,10 +119,6 @@ def BuildAndInstallMinizipNg(
 BuildEnv = EnvironmentConfig.EnvironmentConfiguration(
     RepositoryRootPath, targetPlatform
 )
-
-# zlib
-BuildAndInstallZlib(BuildEnv, EnvironmentConfig.BuildConfig.DEBUG)
-BuildAndInstallZlib(BuildEnv, EnvironmentConfig.BuildConfig.RELEASE)
 
 # minizip-ng
 BuildAndInstallMinizipNg(BuildEnv, EnvironmentConfig.BuildConfig.DEBUG)
